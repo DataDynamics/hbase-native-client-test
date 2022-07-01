@@ -159,7 +159,9 @@ int main() {
     uint64_t num_rows = 2;
     MakeGets(num_rows, row_prefix, gets);
 
+    cout << "before test get" << endl;
     vector <shared_ptr<hbase::Result>> results = table->Get(gets);
+    cout << "after  test get" << endl;
 
     PrintMultiResults(num_rows, results, gets);
 
