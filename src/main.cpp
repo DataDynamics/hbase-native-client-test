@@ -20,6 +20,10 @@
 #include "hbase/test-util/test-util.h"
 #include "hbase/utils/bytes-util.h"
 #include "hbase/utils/optional.h"
+#include "server/zookeeper/ZooKeeper.pb.h"
+#include "hbase/serde/region-info.h"
+#include "hbase/serde/server-name.h"
+#include "hbase/serde/zk.h"
 
 using namespace std;
 using hbase::BytesUtil;
@@ -149,6 +153,10 @@ int main() {
     // hbase::optional <hbase::Configuration> conf = loader.LoadResources("./conf/", paths);
     // /etc/hbase/conf/hbase-site.xml 또는 /etc/hbase/conf/hbase-default.xml 을 읽음
     hbase::optional <hbase::Configuration> conf = loader.LoadDefaultResources();
+
+    std::string zk_node = ZKUtil::MetaZNode(*conf_);
+    cout << "zk_node = " << zk_node << endl;
+
     hbase::Client client(conf.value());
 
     hbase::pb::TableName tn = folly::to<hbase::pb::TableName>("test_table");
