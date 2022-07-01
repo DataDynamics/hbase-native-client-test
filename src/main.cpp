@@ -154,7 +154,7 @@ int main() {
     // /etc/hbase/conf/hbase-site.xml 또는 /etc/hbase/conf/hbase-default.xml 을 읽음
     hbase::optional <hbase::Configuration> conf = loader.LoadDefaultResources();
 
-    std::string zk_node = ZKUtil::MetaZNode(*conf_);
+    std::string zk_node = hbase::ZKUtil::MetaZNode(*conf);
     cout << "zk_node = " << zk_node << endl;
 
     hbase::Client client(conf.value());
