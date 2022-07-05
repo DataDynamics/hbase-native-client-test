@@ -8,21 +8,16 @@
 
 #include "byte_buffer.h"
 
-using namespace std;
+#define CHECK_API_ERROR(retCode, ...) \
+    HBASE_LOG_MSG((retCode ? HBASE_LOG_LEVEL_ERROR : HBASE_LOG_LEVEL_INFO), __VA_ARGS__, retCode);
 
-void print_value(int x) {
-    cout << x << endl;
-}
+using namespace std;
 
 NativeClientWrapper::NativeClientWrapper(string table_name) : NativeClientWrapper(std::move(table_name), ',') {}
 
 NativeClientWrapper::NativeClientWrapper(string table_name, char delimiter) {
     this->table_name = std::move(table_name);
     this->delimiter = delimiter;
-}
-
-void NativeClientWrapper::print_value(int x) {
-
 }
 
 void NativeClientWrapper::gets(const string &rowkeys) {
@@ -63,6 +58,25 @@ void NativeClientWrapper::gets(const vector<string> &rowkeys, const vector<strin
                 }
             }
         }
+    }
+}
+
+void NativeClientWrapper::print_row(const hb_result_t result) {
+    const byte_t *key = NULL;
+    size_t key_len = 0;
+    hb_result_get_key(result, &key, &key_len);
+    size_t cell_count = 0;
+    hb_result_get_cell_count(result, &cell_count);
+    HBASE_LOG_INFO("Row=\'%.*s\', cell count=%d", key_len, key, cell_count);
+    const hb_cell_t **cells;
+    hb_result_get_cells(result, &cells, &cell_count);
+    for (size_t i = 0; i < cell_count; ++i) {
+        HBASE_LOG_INFO(
+                "Cell %d: family=\'%.*s\', qualifier=\'%.*s\', "
+                "value=\'%.*s\', timestamp=%lld.", i,
+                cells[i]->family_len, cells[i]->family,
+                cells[i]->qualifier_len, cells[i]->qualifier,
+                cells[i]->value_len, cells[i]->value, cells[i]->ts);
     }
 }
 

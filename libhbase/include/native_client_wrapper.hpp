@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <sstream>
+#include <hbase/hbase.h>
 
 using namespace std;
 
@@ -26,8 +27,6 @@ public:
     NativeClientWrapper(string table_name, char delimiter);
 
     ~NativeClientWrapper() = default;
-
-    void print_value(int x);
 
     /**
      * rowkey 를 지정하여 get 한다.
@@ -76,6 +75,8 @@ public:
      * @param qualifiers qualifier 목록
      */
     void gets(const vector<string>& rowkeys, const vector<string>& families, const vector<string>& qualifiers);
+
+    void print_row(hb_result_t result);
 };
 
 
