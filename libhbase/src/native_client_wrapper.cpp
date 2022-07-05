@@ -1,4 +1,5 @@
 #include "native_client_wrapper.hpp"
+#include <iostream>
 #include <stdio.h>
 
 using namespace std;
