@@ -277,4 +277,3 @@ cleanup:
 #ifdef __cplusplus
 }
 #endif
-[ddadmin@build:~/Downloads/hbase-native-client-test/build]$
