@@ -43,7 +43,7 @@ void NativeClientWrapper::setup() {
     }
 
     HBASE_LOG_INFO("Connecting to HBase cluster using Zookeeper ensemble '%s'.", this->zk_quorum);
-    if ((this->ret_code = hb_client_create(connection, &client)) != 0) {
+    if ((this->ret_code = hb_client_create(this->connection, &this->client)) != 0) {
         HBASE_LOG_ERROR("Could not connect to HBase cluster : errorCode = %d.", this->ret_code);
         this->cleanup();
     }
