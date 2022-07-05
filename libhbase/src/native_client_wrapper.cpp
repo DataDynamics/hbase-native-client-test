@@ -38,11 +38,11 @@ void NativeClientWrapper::setup() {
     hb_log_set_level(HBASE_LOG_LEVEL_DEBUG); // defaults to INFO
 
     if ((this->ret_code = hb_connection_create(this->zk_quorum.c_str(), this->zk_znode_parent.c_str(), &this->connection)) != 0) {
-        HBASE_LOG_ERROR("Could not create HBase connection : errorCode = %d.", ret_code);
+        HBASE_LOG_ERROR("Could not create HBase connection : errorCode = %d.", this->ret_code);
         this->cleanup();
     }
 
-    HBASE_LOG_INFO("Connecting to HBase cluster using Zookeeper ensemble '%s'.", this->zk_quorum);
+    HBASE_LOG_INFO("Connecting to HBase cluster using Zookeeper ensemble '%s'.", this->zk_quorum.c_str());
     if ((this->ret_code = hb_client_create(this->connection, &this->client)) != 0) {
         HBASE_LOG_ERROR("Could not connect to HBase cluster : errorCode = %d.", this->ret_code);
         this->cleanup();
