@@ -49,7 +49,7 @@ private:
     }
 
     // void client_disconnection_callback(int32_t err, hb_client_t client, void *extra) {
-    void client_disconnection_callback(int32_t err, void *client_, void *extra) {
+    void client_disconnection_callback(int err, void *client_, void *extra) {
         HBASE_LOG_INFO("Received client disconnection callback.");
         pthread_mutex_lock(&this->client_destroyed_mutex);
         this->client_destroyed = true;
