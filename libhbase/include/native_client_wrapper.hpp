@@ -1,4 +1,5 @@
 #include <iostream>
+#include <vector>
 
 using namespace std;
 
@@ -11,7 +12,9 @@ using namespace std;
 
 void print_value(int x);
 
-void gets(string *rowkey, string *family);
+void hbase_gets(vector<string>* rowkeys, vector<string>* families);
+
+void hbase_gets(vector<string>* rowkeys, vector<string>* families, vector<string>* qualifiers);
 
 #ifdef __cplusplus
     }
