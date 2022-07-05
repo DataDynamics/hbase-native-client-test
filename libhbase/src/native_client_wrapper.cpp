@@ -1,6 +1,6 @@
 #include "native_client_wrapper.hpp"
 #include <iostream>
-#include <stdio.h>
+#include <string>
 
 using namespace std;
 
