@@ -25,14 +25,6 @@ NativeClientWrapper::NativeClientWrapper(string zk_quorum, string zk_znode_paren
 }
 
 void NativeClientWrapper::setup() {
-    this->get_done = false;
-    this->get_cv = PTHREAD_COND_INITIALIZER;
-    this->get_mutex = PTHREAD_MUTEX_INITIALIZER;
-
-    this->client_destroyed = false;
-    this->client_destroyed_cv = PTHREAD_COND_INITIALIZER;
-    this->client_destroyed_mutex = PTHREAD_MUTEX_INITIALIZER;
-
     this->connection = NULL;
     this->client = NULL;
     hb_log_set_level(HBASE_LOG_LEVEL_DEBUG); // defaults to INFO
@@ -53,8 +45,8 @@ void NativeClientWrapper::setup() {
 int32_t NativeClientWrapper::cleanup() {
     if (this->client) {
         HBASE_LOG_INFO("Disconnecting client.");
-        hb_client_destroy(this->client, this->client_disconnection_callback, NULL);
-        this->wait_client_disconnection();
+        hb_client_destroy(this->client, client_disconnection_callback, NULL);
+        wait_client_disconnection();
     }
 
     if (this->connection) {
@@ -64,14 +56,14 @@ int32_t NativeClientWrapper::cleanup() {
     // pthread_cond_destroy(&puts_cv);
     // pthread_mutex_destroy(&puts_mutex);
 
-    pthread_cond_destroy(&this->get_cv);
-    pthread_mutex_destroy(&this->get_mutex);
+    pthread_cond_destroy(&get_cv);
+    pthread_mutex_destroy(&get_mutex);
 
     // pthread_cond_destroy(&del_cv);
     // pthread_mutex_destroy(&del_mutex);
 
-    pthread_cond_destroy(&this->client_destroyed_cv);
-    pthread_mutex_destroy(&this->client_destroyed_mutex);
+    pthread_cond_destroy(&client_destroyed_cv);
+    pthread_mutex_destroy(&client_destroyed_mutex);
 
     return this->ret_code;
 }

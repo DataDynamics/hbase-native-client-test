@@ -8,6 +8,38 @@ using namespace std;
 #define CHECK_API_ERROR(retCode, ...) \
     HBASE_LOG_MSG((retCode ? HBASE_LOG_LEVEL_ERROR : HBASE_LOG_LEVEL_INFO), __VA_ARGS__, retCode);
 
+/**
+ * Get synchronizer and callback
+ */
+static volatile bool get_done = false;
+static pthread_cond_t get_cv = PTHREAD_COND_INITIALIZER;
+static pthread_mutex_t get_mutex = PTHREAD_MUTEX_INITIALIZER;
+
+/**
+ * Client destroy synchronizer and callbacks
+ */
+static volatile bool client_destroyed = false;
+static pthread_cond_t client_destroyed_cv = PTHREAD_COND_INITIALIZER;
+static pthread_mutex_t client_destroyed_mutex = PTHREAD_MUTEX_INITIALIZER;
+
+static void wait_client_disconnection() {
+    HBASE_LOG_INFO("Waiting for client to disconnect.");
+    pthread_mutex_lock(&client_destroyed_mutex);
+    while (!client_destroyed) {
+        pthread_cond_wait(&client_destroyed_cv, &client_destroyed_mutex);
+    }
+    pthread_mutex_unlock(&client_destroyed_mutex);
+    HBASE_LOG_INFO("Client disconnected.");
+}
+
+static void client_disconnection_callback(int32_t err, hb_client_t client, void *extra) {
+    HBASE_LOG_INFO("Received client disconnection callback.");
+    pthread_mutex_lock(&client_destroyed_mutex);
+    client_destroyed = true;
+    pthread_cond_signal(&client_destroyed_cv);
+    pthread_mutex_unlock(&client_destroyed_mutex);
+}
+
 class NativeClientWrapper {
 private:
     int32_t ret_code = 0;
@@ -20,14 +52,6 @@ private:
     hb_connection_t connection;
     hb_client_t client;
 
-    volatile bool get_done;
-    pthread_cond_t get_cv;
-    pthread_mutex_t get_mutex;
-
-    volatile bool client_destroyed;
-    pthread_cond_t client_destroyed_cv;
-    pthread_mutex_t client_destroyed_mutex;
-
     vector<string> split(const string &input) const {
         vector<string> answer;
         stringstream ss(input);
@@ -36,25 +60,6 @@ private:
             answer.push_back(temp);
         }
         return answer;
-    }
-
-    void wait_client_disconnection() {
-        HBASE_LOG_INFO("Waiting for client to disconnect.");
-        pthread_mutex_lock(&this->client_destroyed_mutex);
-        while (!this->client_destroyed) {
-            pthread_cond_wait(&this->client_destroyed_cv, &this->client_destroyed_mutex);
-        }
-        pthread_mutex_unlock(&this->client_destroyed_mutex);
-        HBASE_LOG_INFO("Client disconnected.");
-    }
-
-    // void client_disconnection_callback(int32_t err, hb_client_t client, void *extra) {
-    void client_disconnection_callback(int err, void *client_, void *extra) {
-        HBASE_LOG_INFO("Received client disconnection callback.");
-        pthread_mutex_lock(&this->client_destroyed_mutex);
-        this->client_destroyed = true;
-        pthread_cond_signal(&this->client_destroyed_cv);
-        pthread_mutex_unlock(&this->client_destroyed_mutex);
     }
 
 public:
