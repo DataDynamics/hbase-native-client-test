@@ -20,7 +20,7 @@ vector<string> split(string input, char delimiter) {
     return answer;
 }
 
-void hbase_gets(vector<string> rowkeys, vector<string> families) {
+void gets(vector<string> rowkeys, vector<string> families) {
     for (int i = 0; i < rowkeys.size(); i++) {
         cout << "rowkeys[" << i << "] = " << rowkeys[i] << " " << endl;
     }
@@ -29,7 +29,7 @@ void hbase_gets(vector<string> rowkeys, vector<string> families) {
     }
 }
 
-void hbase_gets(vector<string> rowkeys, vector<string> families, vector<string> qualifiers) {
+void gets(vector<string> rowkeys, vector<string> families, vector<string> qualifiers) {
     for (int i = 0; i < rowkeys.size(); i++) {
         cout << "rowkeys[" << i << "] = " << rowkeys[i] << " " << endl;
     }
@@ -51,7 +51,6 @@ int main(int argc, char **argv) {
     const vector<string> rowkey_vector = split(rowkeys, ',');
     const vector<string> cf_vector = split(cfs, ',');
     const vector<string> q_vector = split(qs, ',');
-
-    hbase_gets(rowkey_vector, cf_vector);
-    hbase_gets(rowkey_vector, cf_vector, q_vector);
+    gets(rowkey_vector, cf_vector);
+    gets(rowkey_vector, cf_vector, q_vector);
 }
