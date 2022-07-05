@@ -20,6 +20,12 @@ vector<string> split(string input, char delimiter) {
     return answer;
 }
 
+void gets(vector<string> rowkeys) {
+    for (string rowkey: rowkeys) {
+        cout << "rowkey" << "=" << rowkey << endl;
+    }
+}
+
 void gets(vector<string> rowkeys, vector<string> families) {
     for (string rowkey: rowkeys) {
         for (auto family: families) {
