@@ -37,7 +37,7 @@ void NativeClientWrapper::setup() {
     this->client = NULL;
     hb_log_set_level(HBASE_LOG_LEVEL_DEBUG); // defaults to INFO
 
-    if ((this->ret_code = hb_connection_create(this->zk_quorum, this->zk_znode_parent, &this->connection)) != 0) {
+    if ((this->ret_code = hb_connection_create(this->zk_quorum.c_str(), this->zk_znode_parent.c_str(), &this->connection)) != 0) {
         HBASE_LOG_ERROR("Could not create HBase connection : errorCode = %d.", ret_code);
         this->cleanup();
     }
