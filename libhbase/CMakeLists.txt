@@ -13,6 +13,7 @@ include_directories(
   /home/ddadmin/Downloads/libhbase/src/test/native/common
   /home/ddadmin/Downloads/libhbase/target/gtest-1.7.0/include
   /usr/local/lib64
+  ./include
 )
 
 FIND_LIBRARY(GTEST_LIBS NAMES libgtest.so PATHS /home/ddadmin/Downloads/libhbase/target/gtest-1.7.0)
