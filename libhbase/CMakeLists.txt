@@ -23,4 +23,4 @@ FIND_LIBRARY(BYTE_BUFFER_LIBS NAMES libbytebuffer.so PATHS /home/ddadmin/Downloa
 # add_executable(hbase-native-client-test src/main.cpp)
 set_target_properties(libhbase_wrapper PROPERTIES SOVERSION 1)
 
-target_link_libraries(hbase-native-client-test LINK_PUBLIC ${GTEST_LIBS} ${HBASE_LIBS} ${JVM_LIBS} ${BYTE_BUFFER_LIBS})
+target_link_libraries(libhbase_wrapper LINK_PUBLIC ${GTEST_LIBS} ${HBASE_LIBS} ${JVM_LIBS} ${BYTE_BUFFER_LIBS})
