@@ -21,23 +21,24 @@ vector<string> split(string input, char delimiter) {
 }
 
 void gets(vector<string> rowkeys, vector<string> families) {
-    for (int i = 0; i < rowkeys.size(); i++) {
-        cout << "rowkeys[" << i << "] = " << rowkeys[i] << " " << endl;
-    }
-    for (int i = 0; i < families.size(); i++) {
-        cout << "families[" << i << "] = " << families[i] << " " << endl;
+    for (string rowkey: rowkeys) {
+        for (auto family: families) {
+            cout << "rowkey:family" << "=" << rowkey << ":" << family << endl;
+        }
     }
 }
 
 void gets(vector<string> rowkeys, vector<string> families, vector<string> qualifiers) {
-    for (int i = 0; i < rowkeys.size(); i++) {
-        cout << "rowkeys[" << i << "] = " << rowkeys[i] << " " << endl;
-    }
-    for (int i = 0; i < families.size(); i++) {
-        cout << "families[" << i << "] = " << families[i] << " " << endl;
-    }
-    for (int i = 0; i < qualifiers.size(); i++) {
-        cout << "qualifiers[" << i << "] = " << qualifiers[i] << " " << endl;
+    for (string rowkey: rowkeys) {
+        for (auto family: families) {
+            if (qualifiers.empty()) {
+                cout << "rowkey:family" << "=" << rowkey << ":" << family << endl;
+            } else {
+                for (auto qualifier: qualifiers) {
+                    cout << "rowkey:family:qualifier" << "=" << rowkey << ":" << family << ":" << qualifier << endl;
+                }
+            }
+        }
     }
 }
 
