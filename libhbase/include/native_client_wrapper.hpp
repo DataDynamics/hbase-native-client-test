@@ -10,6 +10,20 @@ using namespace std;
 #define CHECK_API_ERROR(retCode, ...) \
     HBASE_LOG_MSG((retCode ? HBASE_LOG_LEVEL_ERROR : HBASE_LOG_LEVEL_INFO), __VA_ARGS__, retCode);
 
+/**
+ * Get synchronizer and callback
+ */
+static volatile bool get_done = false;
+static pthread_cond_t get_cv = PTHREAD_COND_INITIALIZER;
+static pthread_mutex_t get_mutex = PTHREAD_MUTEX_INITIALIZER;
+
+/**
+ * Client destroy synchronizer and callbacks
+ */
+static volatile bool client_destroyed = false;
+static pthread_cond_t client_destroyed_cv = PTHREAD_COND_INITIALIZER;
+static pthread_mutex_t client_destroyed_mutex = PTHREAD_MUTEX_INITIALIZER;
+
 class NativeClientWrapper {
 private:
     int32_t ret_code = 0;
@@ -142,20 +156,6 @@ public:
      */
     void gets(const vector<string> &rowkeys, const vector<string> &families, const vector<string> &qualifiers);
 };
-
-/**
- * Get synchronizer and callback
- */
-static volatile bool get_done = false;
-static pthread_cond_t get_cv = PTHREAD_COND_INITIALIZER;
-static pthread_mutex_t get_mutex = PTHREAD_MUTEX_INITIALIZER;
-
-/**
- * Client destroy synchronizer and callbacks
- */
-static volatile bool client_destroyed = false;
-static pthread_cond_t client_destroyed_cv = PTHREAD_COND_INITIALIZER;
-static pthread_mutex_t client_destroyed_mutex = PTHREAD_MUTEX_INITIALIZER;
 
 static void get_callback(int32_t err, hb_client_t client, hb_get_t get, hb_result_t result, void *extra) {
     // bytebuffer r_buffer = (bytebuffer) extra;

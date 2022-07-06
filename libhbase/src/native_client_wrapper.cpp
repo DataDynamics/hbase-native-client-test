@@ -87,7 +87,7 @@ void NativeClientWrapper::gets(const vector<string> &rowkeys, const vector<strin
     }
 }
 
-static void process_row(hb_result_t result) {
+void NativeClientWrapper::process_row(hb_result_t result) {
     const byte_t *key = NULL;
     size_t key_len = 0;
     hb_result_get_key(result, &key, &key_len);
