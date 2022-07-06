@@ -46,6 +46,7 @@ NativeClientWrapper::NativeClientWrapper(string zk_quorum, string zk_znode_paren
     this->table_name = std::move(table_name);
     this->table_name_len = strlen(this->table_name.c_str());
     this->delimiter = delimiter;
+    this->get_done = false;
     this->connection = NULL;
     this->client = NULL;
     this->setup();
@@ -187,7 +188,7 @@ void NativeClientWrapper::gets(const vector<string> &rowkeys, const vector<strin
         }
         gets.push_back(get);
 
-        NativeClientWrapper::get_done = false;
+        this->get_done = false;
         hb_get_send(this->client, get, get_callback, r_buffer);
         NativeClientWrapper::wait_for_get();
 

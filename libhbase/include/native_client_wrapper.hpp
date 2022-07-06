@@ -23,6 +23,8 @@ private:
     hb_connection_t connection;
     hb_client_t client;
 
+    volatile bool get_done;
+
     vector<string> split(const string &input) const {
         vector<string> answer;
         stringstream ss(input);
@@ -37,7 +39,7 @@ public:
     /**
      * Get synchronizer and callback
      */
-    static volatile bool get_done;
+    // static volatile bool get_done;
     static pthread_cond_t get_cv;
     static pthread_mutex_t get_mutex;
 
@@ -149,7 +151,6 @@ public:
 /**
  * Get synchronizer and callback
  */
-volatile bool NativeClientWrapper::get_done = false;
 pthread_cond_t NativeClientWrapper::get_cv = PTHREAD_COND_INITIALIZER;
 pthread_mutex_t NativeClientWrapper::get_mutex = PTHREAD_MUTEX_INITIALIZER;
 
