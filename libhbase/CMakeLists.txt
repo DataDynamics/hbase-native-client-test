@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 2.8)
 project(libhbase_wrapper LANGUAGES CXX)
 
-#set(CMAKE_C_COMPILER /bin/gcc)
-#set(CMAKE_CXX_COMPILER /bin/g++)
+set(CMAKE_C_COMPILER /opt/rh/devtoolset-7/root/bin/gcc)
+set(CMAKE_CXX_COMPILER /opt/rh/devtoolset-7/root/bin/g++)
 set(CMAKE_CXX_STANDARD 11)
 set(D_GLIBCXX_USE_CXX11_ABI 0)
 
