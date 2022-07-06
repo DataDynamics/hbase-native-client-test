@@ -35,7 +35,7 @@ private:
     vector<string> dummy;
 
     hb_connection_t connection;
-    hb_client_t client;
+    static hb_client_t client;
 
     vector<string> split(const string &input) const {
         vector<string> answer;

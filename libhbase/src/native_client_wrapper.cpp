@@ -33,7 +33,7 @@ NativeClientWrapper::NativeClientWrapper(string zk_quorum, string zk_znode_paren
     }
 
     HBASE_LOG_INFO("Connecting to HBase cluster using Zookeeper ensemble '%s'.", this->zk_quorum.c_str());
-    if ((this->ret_code = hb_client_create(this->connection, &this->client)) != 0) {
+    if ((this->ret_code = hb_client_create(this->connection, &NativeClientWrapper::client)) != 0) {
         HBASE_LOG_ERROR("Could not connect to HBase cluster : errorCode = %d.", this->ret_code);
         this->cleanup();
     }
@@ -78,7 +78,7 @@ void NativeClientWrapper::gets(const vector<string> &rowkeys, const vector<strin
         gets.push_back(get);
 
         get_done = false;
-        hb_get_send(this->client, get, get_callback, r_buffer);
+        hb_get_send(NativeClientWrapper::client, get, get_callback, r_buffer);
         wait_for_get();
 
         if (r_buffer) {
