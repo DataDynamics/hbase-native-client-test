@@ -15,31 +15,17 @@
 
 using namespace std;
 
-/**
- * Get synchronizer and callback
- */
-// volatile bool NativeClientWrapper::get_done = false;
-// pthread_cond_t NativeClientWrapper::get_cv = PTHREAD_COND_INITIALIZER;
-// pthread_mutex_t NativeClientWrapper::get_mutex = PTHREAD_MUTEX_INITIALIZER;
-
-/**
- * Client destroy synchronizer and callbacks
- */
-// volatile bool NativeClientWrapper::client_destroyed = false;
-// pthread_cond_t NativeClientWrapper::client_destroyed_cv = PTHREAD_COND_INITIALIZER;
-// pthread_mutex_t NativeClientWrapper::client_destroyed_mutex = PTHREAD_MUTEX_INITIALIZER;
-
 NativeClientWrapper::NativeClientWrapper(string zk_quorum, string zk_znode_parent, string table_name)
         : NativeClientWrapper(std::move(zk_quorum), std::move(zk_znode_parent), std::move(table_name), ',') {}
 
 NativeClientWrapper::NativeClientWrapper(string zk_quorum, string zk_znode_parent, string table_name, char delimiter) {
-    // NativeClientWrapper::get_done = false;
-    // NativeClientWrapper::get_cv = PTHREAD_COND_INITIALIZER;
-    // NativeClientWrapper::get_mutex = PTHREAD_MUTEX_INITIALIZER;
+    this->get_done = false;
+    this->get_cv = PTHREAD_COND_INITIALIZER;
+    this->get_mutex = PTHREAD_MUTEX_INITIALIZER;
 
-    // NativeClientWrapper::client_destroyed = false;
-    // NativeClientWrapper::client_destroyed_cv = PTHREAD_COND_INITIALIZER;
-    // NativeClientWrapper::client_destroyed_mutex = PTHREAD_MUTEX_INITIALIZER;
+    this->client_destroyed = false;
+    this->client_destroyed_cv = PTHREAD_COND_INITIALIZER;
+    this->client_destroyed_mutex = PTHREAD_MUTEX_INITIALIZER;
 
     this->zk_quorum = std::move(zk_quorum);
     this->zk_znode_parent = std::move(zk_znode_parent);
@@ -47,16 +33,9 @@ NativeClientWrapper::NativeClientWrapper(string zk_quorum, string zk_znode_paren
     this->table_name_len = strlen(this->table_name.c_str());
     this->delimiter = delimiter;
     this->get_done = false;
-    this->connection = NULL;
-    this->client = NULL;
-    this->setup();
-}
-
-NativeClientWrapper::~NativeClientWrapper() {
-    this->cleanup();
-}
-
-void NativeClientWrapper::setup() {
+    // this->connection = NULL;
+    // this->client = NULL;
+    // this->setup();
     hb_log_set_level(HBASE_LOG_LEVEL_DEBUG); // defaults to INFO
 
     if ((this->ret_code = hb_connection_create(this->zk_quorum.c_str(), this->zk_znode_parent.c_str(),
@@ -71,6 +50,26 @@ void NativeClientWrapper::setup() {
         this->cleanup();
     }
 }
+
+NativeClientWrapper::~NativeClientWrapper() {
+    this->cleanup();
+}
+
+// void NativeClientWrapper::setup() {
+//     hb_log_set_level(HBASE_LOG_LEVEL_DEBUG); // defaults to INFO
+//
+//     if ((this->ret_code = hb_connection_create(this->zk_quorum.c_str(), this->zk_znode_parent.c_str(),
+//                                                &this->connection)) != 0) {
+//         HBASE_LOG_ERROR("Could not create HBase connection : errorCode = %d.", this->ret_code);
+//         this->cleanup();
+//     }
+//
+//     HBASE_LOG_INFO("Connecting to HBase cluster using Zookeeper ensemble '%s'.", this->zk_quorum.c_str());
+//     if ((this->ret_code = hb_client_create(this->connection, &this->client)) != 0) {
+//         HBASE_LOG_ERROR("Could not connect to HBase cluster : errorCode = %d.", this->ret_code);
+//         this->cleanup();
+//     }
+// }
 
 int32_t NativeClientWrapper::cleanup() {
     if (this->client) {
@@ -125,10 +124,10 @@ void NativeClientWrapper::get_callback(int32_t err, hb_client_t client, hb_get_t
     // bytebuffer_free(rowKey);
     hb_get_destroy(get);
 
-    pthread_mutex_lock(&NativeClientWrapper::get_mutex);
-    NativeClientWrapper::get_done = true;
-    pthread_cond_signal(&NativeClientWrapper::get_cv);
-    pthread_mutex_unlock(&NativeClientWrapper::get_mutex);
+    pthread_mutex_lock(&this->get_mutex);
+    this->get_done = true;
+    pthread_cond_signal(&this->get_cv);
+    pthread_mutex_unlock(&this->get_mutex);
 }
 
 void NativeClientWrapper::gets(const string &rowkeys) {
@@ -172,7 +171,8 @@ void NativeClientWrapper::gets(const vector<string> &rowkeys, const vector<strin
                     hb_get_add_column(get, f_buffer->buffer, f_buffer->length, NULL, 0);
                 } else {
                     for (const string &qualifier: qualifiers) {
-                        HBASE_LOG_DEBUG("rowkey:family:qualifier=%s:%s:%s", rowkey.c_str(), family.c_str(), qualifier.c_str());
+                        HBASE_LOG_DEBUG("rowkey:family:qualifier=%s:%s:%s", rowkey.c_str(), family.c_str(),
+                                        qualifier.c_str());
                         // cout << "rowkey:family:qualifier" << "=" << rowkey << ":" << family << ":" << qualifier << endl;
                         bytebuffer q_buffer = bytebuffer_strcpy(qualifier.c_str());
                         hb_get_add_column(get, f_buffer->buffer, f_buffer->length, q_buffer->buffer, q_buffer->length);
@@ -190,7 +190,7 @@ void NativeClientWrapper::gets(const vector<string> &rowkeys, const vector<strin
 
         this->get_done = false;
         hb_get_send(this->client, get, get_callback, r_buffer);
-        NativeClientWrapper::wait_for_get();
+        this->wait_for_get();
 
         if (r_buffer) {
             bytebuffer_free(r_buffer);
