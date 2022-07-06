@@ -55,7 +55,7 @@ public:
         this->cleanup();
     }
 
-    void get_callback(int32_t err, hb_client_t client, hb_get_t get, hb_result_t result, void *extra) {
+    static void get_callback(int32_t err, hb_client_t client, hb_get_t get, hb_result_t result, void *extra) {
         // bytebuffer r_buffer = (bytebuffer) extra;
         if (err == 0) {
             // const char *table_name;
@@ -88,7 +88,7 @@ public:
         pthread_mutex_unlock(&NativeClientWrapper::get_mutex);
     }
 
-    void process_row(hb_result_t result);
+    static void process_row(hb_result_t result);
 
     int32_t cleanup() {
         if (this->client) {
