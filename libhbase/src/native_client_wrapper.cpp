@@ -181,6 +181,8 @@ void NativeClientWrapper::gets(const vector<string> &rowkeys, const vector<strin
             bytebuffer_free(r_buffer);
         }
     }
+
+    HBASE_LOG_INFO("Will be send get size = %d", gets.size());
     for (const hb_get_t &get: gets) {
         // NativeClientWrapper::get_done = false;
         // hb_get_send(client, get, get_callback, r_buffer);
