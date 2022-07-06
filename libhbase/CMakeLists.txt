@@ -29,4 +29,5 @@ add_library(libhbaseclient SHARED src/native_client_wrapper.cpp)
 #install(FILES include/native_client_wrapper.hpp DESTINATION include)
 
 #target_link_libraries(libhbase_wrapper LINK_PUBLIC ${GTEST_LIBS} ${HBASE_LIBS} ${JVM_LIBS} ${BYTE_BUFFER_LIBS})
+target_link_libraries(libhbase_wrapper_example LINK_PUBLIC ${HBASE_LIBS} ${JVM_LIBS} ${BYTE_BUFFER_LIBS})
 target_link_libraries(libhbase_wrapper LINK_PUBLIC ${HBASE_LIBS} ${JVM_LIBS} ${BYTE_BUFFER_LIBS})
