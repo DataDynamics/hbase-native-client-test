@@ -3,6 +3,8 @@
 #include <sstream>
 #include <hbase/hbase.h>
 
+#line __LINE__ "src/native_client_wrapper.hpp"
+
 using namespace std;
 
 #define CHECK_API_ERROR(retCode, ...) \
@@ -141,5 +143,5 @@ public:
      */
     void gets(const vector<hb_get_t> &gets);
 
-    void print_row(hb_result_t result);
+    void process_row(hb_result_t result);
 };
