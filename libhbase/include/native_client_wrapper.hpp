@@ -56,7 +56,7 @@ public:
         this->cleanup();
     }
 
-    static void get_callback(int32_t err, hb_client_t client, hb_get_t get, hb_result_t result, void *extra);
+    void get_callback(int32_t err, hb_client_t client, hb_get_t get, hb_result_t result, void *extra);
 
     static void process_row(hb_result_t result);
 
