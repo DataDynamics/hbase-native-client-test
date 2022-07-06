@@ -50,7 +50,7 @@ public:
 
     NativeClientWrapper(string zk_quorum, string zk_znode_parent, string table_name, char delimiter);
 
-    ~NativeClientWrapper() = default;
+    ~NativeClientWrapper();
 
     static void wait_for_get() {
         HBASE_LOG_INFO("Waiting for get operation to complete.");

@@ -51,6 +51,10 @@ NativeClientWrapper::NativeClientWrapper(string zk_quorum, string zk_znode_paren
     this->setup();
 }
 
+NativeClientWrapper::~NativeClientWrapper() {
+    this->cleanup();
+}
+
 void NativeClientWrapper::setup() {
     hb_log_set_level(HBASE_LOG_LEVEL_DEBUG); // defaults to INFO
 
@@ -188,11 +192,11 @@ void NativeClientWrapper::gets(const vector<string> &rowkeys, const vector<strin
     }
 
     HBASE_LOG_INFO("Will be send get size = %d", gets.size());
+    NativeClientWrapper::get_done = false;
     for (const hb_get_t &get: gets) {
-        // NativeClientWrapper::get_done = false;
         // hb_get_send(client, get, get_callback, r_buffer);
-        // NativeClientWrapper::wait_for_get();
     }
+    NativeClientWrapper::wait_for_get();
 }
 
 void NativeClientWrapper::print_row(const hb_result_t result) {
@@ -236,9 +240,9 @@ int main(int argc, char **argv) {
 
     NativeClientWrapper wrapper(zk_quorum_arg, zk_znode_parent_arg, table_name_arg);
 
-    wrapper.gets(rowkeys_arg);
-    wrapper.gets(rowkeys_arg, cfs_arg);
-    wrapper.gets(rowkeys_arg, cfs_arg, qs_arg);
+    // wrapper.gets(rowkeys_arg);
+    // wrapper.gets(rowkeys_arg, cfs_arg);
+    // wrapper.gets(rowkeys_arg, cfs_arg, qs_arg);
 
     wrapper.gets(rowkeys);
     wrapper.gets(rowkeys, cfs);
