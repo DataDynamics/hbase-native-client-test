@@ -26,14 +26,14 @@ private:
     /**
      * Get synchronizer and callback
      */
-    volatile bool get_done;
+    bool get_done;
     pthread_cond_t get_cv;
     pthread_mutex_t get_mutex;
 
     /**
      * Client destroy synchronizer and callbacks
      */
-    volatile bool client_destroyed;
+    bool client_destroyed;
     pthread_cond_t client_destroyed_cv;
     pthread_mutex_t client_destroyed_mutex;
 
