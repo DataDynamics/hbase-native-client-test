@@ -3,12 +3,15 @@
 cmake_minimum_required(VERSION 2.8)
 project(libhbase_wrapper)
 
-set(CMAKE_C_COMPILER /opt/rh/devtoolset-7/root/bin/gcc)
-set(CMAKE_CXX_COMPILER /opt/rh/devtoolset-7/root/bin/g++)
+#set(CMAKE_C_COMPILER /opt/rh/devtoolset-7/root/bin/gcc)
+#set(CMAKE_CXX_COMPILER /opt/rh/devtoolset-7/root/bin/g++)
+set(CMAKE_C_COMPILER /bin/gcc)
+set(CMAKE_CXX_COMPILER /bin/g++)
 set(CMAKE_CXX_STANDARD 11)
 set(D_GLIBCXX_USE_CXX11_ABI 0)
 
-set(CMAKE_CXX_FLAGS "-std=c++0x ${CMAKE_CXX_FLAGS} -g -ftest-coverage -fprofile-arcs -fpermissive")
+#set(CMAKE_CXX_FLAGS "-std=c++0x ${CMAKE_CXX_FLAGS} -g -ftest-coverage -fprofile-arcs -fpermissive")
+set(CMAKE_CXX_FLAGS "-std=c++0x ${CMAKE_CXX_FLAGS} -g -ftest-coverage -fprofile-arcs")
 
 include_directories(
   /home/ddadmin/Downloads/libhbase/src/main/native/include
