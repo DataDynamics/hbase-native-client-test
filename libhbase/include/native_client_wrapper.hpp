@@ -9,32 +9,18 @@ using namespace std;
 
 #define CHECK_API_ERROR(retCode, ...) HBASE_LOG_MSG((retCode ? HBASE_LOG_LEVEL_ERROR : HBASE_LOG_LEVEL_INFO), __VA_ARGS__, retCode);
 
-/**
- * Get synchronizer and callback
- */
-static volatile bool get_done = false;
-static pthread_cond_t get_cv = PTHREAD_COND_INITIALIZER;
-static pthread_mutex_t get_mutex = PTHREAD_MUTEX_INITIALIZER;
-
-/**
- * Client destroy synchronizer and callbacks
- */
-static volatile bool client_destroyed = false;
-static pthread_cond_t client_destroyed_cv = PTHREAD_COND_INITIALIZER;
-static pthread_mutex_t client_destroyed_mutex = PTHREAD_MUTEX_INITIALIZER;
-
 class NativeClientWrapper {
 private:
     int32_t ret_code = 0;
     string zk_quorum;
     string zk_znode_parent;
-    static string table_name;
-    static size_t table_name_len;
+    string table_name;
+    size_t table_name_len;
     char delimiter;
     vector<string> dummy;
 
     hb_connection_t connection;
-    static hb_client_t client;
+    hb_client_t client;
 
     vector<string> split(const string &input) const {
         vector<string> answer;
@@ -69,7 +55,7 @@ public:
         this->cleanup();
     }
 
-    static void get_callback(int32_t err, hb_client_t client, hb_get_t get, hb_result_t result, void *extra) {
+    void get_callback(int32_t err, hb_client_t client, hb_get_t get, hb_result_t result, void *extra) {
         // bytebuffer r_buffer = (bytebuffer) extra;
         if (err == 0) {
             // const char *table_name;
@@ -96,13 +82,13 @@ public:
         // bytebuffer_free(r_buffer);
         hb_get_destroy(get);
 
-        pthread_mutex_lock(&get_mutex);
-        get_done = true;
-        pthread_cond_signal(&get_cv);
-        pthread_mutex_unlock(&get_mutex);
+        pthread_mutex_lock(&NativeClientWrapper::get_mutex);
+        NativeClientWrapper::get_done = true;
+        pthread_cond_signal(&NativeClientWrapper::get_cv);
+        pthread_mutex_unlock(&NativeClientWrapper::get_mutex);
     }
 
-    static void process_row(hb_result_t result);
+    void process_row(hb_result_t result);
 
     int32_t cleanup() {
         if (this->client) {
@@ -118,14 +104,14 @@ public:
         // pthread_cond_destroy(&puts_cv);
         // pthread_mutex_destroy(&puts_mutex);
 
-        pthread_cond_destroy(&get_cv);
-        pthread_mutex_destroy(&get_mutex);
+        pthread_cond_destroy(&NativeClientWrapper::get_cv);
+        pthread_mutex_destroy(&NativeClientWrapper::get_mutex);
 
         // pthread_cond_destroy(&del_cv);
         // pthread_mutex_destroy(&del_mutex);
 
-        pthread_cond_destroy(&client_destroyed_cv);
-        pthread_mutex_destroy(&client_destroyed_mutex);
+        pthread_cond_destroy(&NativeClientWrapper::client_destroyed_cv);
+        pthread_mutex_destroy(&NativeClientWrapper::client_destroyed_mutex);
 
         return this->ret_code;
     }
@@ -165,7 +151,7 @@ public:
      * @param families column family 목록
      */
     void gets(const vector<string> &rowkeys, const vector<string> &families) {
-        gets(rowkeys, families, this->dummy);
+        this->gets(rowkeys, families, this->dummy);
     }
 
     /**
@@ -176,7 +162,7 @@ public:
      * @param qualifiers qualifier 목록
      */
     void gets(const string &rowkeys, const string &families, const string &qualifiers) {
-        gets(this->split(rowkeys), this->split(families), this->split(qualifiers));
+        this->gets(this->split(rowkeys), this->split(families), this->split(qualifiers));
     }
 
     /**
@@ -186,33 +172,47 @@ public:
      * @param families column family 목록
      * @param qualifiers qualifier 목록
      */
-    static void gets(const vector<string> &rowkeys, const vector<string> &families, const vector<string> &qualifiers);
+    void gets(const vector<string> &rowkeys, const vector<string> &families, const vector<string> &qualifiers);
 };
+
+/**
+ * Get synchronizer and callback
+ */
+volatile bool NativeClientWrapper::get_done = false;
+pthread_cond_t NativeClientWrapper::get_cv = PTHREAD_COND_INITIALIZER;
+pthread_mutex_t NativeClientWrapper::get_mutex = PTHREAD_MUTEX_INITIALIZER;
+
+/**
+ * Client destroy synchronizer and callbacks
+ */
+volatile bool NativeClientWrapper::client_destroyed = false;
+pthread_cond_t NativeClientWrapper::client_destroyed_cv = PTHREAD_COND_INITIALIZER;
+pthread_mutex_t NativeClientWrapper::client_destroyed_mutex = PTHREAD_MUTEX_INITIALIZER;
 
 static void wait_for_get() {
     HBASE_LOG_INFO("Waiting for get operation to complete.");
-    pthread_mutex_lock(&get_mutex);
-    while (!get_done) {
-        pthread_cond_wait(&get_cv, &get_mutex);
+    pthread_mutex_lock(&NativeClientWrapper::get_mutex);
+    while (!NativeClientWrapper::get_done) {
+        pthread_cond_wait(&NativeClientWrapper::get_cv, &NativeClientWrapper::get_mutex);
     }
-    pthread_mutex_unlock(&get_mutex);
+    pthread_mutex_unlock(&NativeClientWrapper::get_mutex);
     HBASE_LOG_INFO("Get operation completed.");
 }
 
 static void wait_client_disconnection() {
     HBASE_LOG_INFO("Waiting for client to disconnect.");
-    pthread_mutex_lock(&client_destroyed_mutex);
-    while (!client_destroyed) {
-        pthread_cond_wait(&client_destroyed_cv, &client_destroyed_mutex);
+    pthread_mutex_lock(&NativeClientWrapper::client_destroyed_mutex);
+    while (!NativeClientWrapper::client_destroyed) {
+        pthread_cond_wait(&NativeClientWrapper::client_destroyed_cv, &NativeClientWrapper::client_destroyed_mutex);
     }
-    pthread_mutex_unlock(&client_destroyed_mutex);
+    pthread_mutex_unlock(&NativeClientWrapper::client_destroyed_mutex);
     HBASE_LOG_INFO("Client disconnected.");
 }
 
 static void client_disconnection_callback(int32_t err, hb_client_t client, void *extra) {
     HBASE_LOG_INFO("Received client disconnection callback.");
-    pthread_mutex_lock(&client_destroyed_mutex);
-    client_destroyed = true;
-    pthread_cond_signal(&client_destroyed_cv);
-    pthread_mutex_unlock(&client_destroyed_mutex);
+    pthread_mutex_lock(&NativeClientWrapper::client_destroyed_mutex);
+    NativeClientWrapper::client_destroyed = true;
+    pthread_cond_signal(&NativeClientWrapper::client_destroyed_cv);
+    pthread_mutex_unlock(&NativeClientWrapper::client_destroyed_mutex);
 }

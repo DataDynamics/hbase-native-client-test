@@ -20,8 +20,8 @@ NativeClientWrapper::NativeClientWrapper(string zk_quorum, string zk_znode_paren
 NativeClientWrapper::NativeClientWrapper(string zk_quorum, string zk_znode_parent, string table_name_, char delimiter) {
     this->zk_quorum = std::move(zk_quorum);
     this->zk_znode_parent = std::move(zk_znode_parent);
-    table_name = std::move(table_name_);
-    table_name_len = strlen(table_name.c_str());
+    this->table_name = std::move(table_name_);
+    this->table_name_len = strlen(table_name.c_str());
     this->delimiter = delimiter;
     hb_log_set_level(HBASE_LOG_LEVEL_DEBUG); // defaults to INFO
 
@@ -32,7 +32,7 @@ NativeClientWrapper::NativeClientWrapper(string zk_quorum, string zk_znode_paren
     }
 
     HBASE_LOG_INFO("Connecting to HBase cluster using Zookeeper ensemble '%s'.", this->zk_quorum.c_str());
-    if ((this->ret_code = hb_client_create(this->connection, &client)) != 0) {
+    if ((this->ret_code = hb_client_create(this->connection, &this->client)) != 0) {
         HBASE_LOG_ERROR("Could not connect to HBase cluster : errorCode = %d.", this->ret_code);
         this->cleanup();
     }
@@ -40,6 +40,8 @@ NativeClientWrapper::NativeClientWrapper(string zk_quorum, string zk_znode_paren
 
 void NativeClientWrapper::gets(const vector<string> &rowkeys, const vector<string> &families,
                                const vector<string> &qualifiers) {
+    void (*fptr)() = get_callback;
+
     vector<hb_get_t> gets;
     for (const string &rowkey: rowkeys) {
         bytebuffer r_buffer = bytebuffer_strcpy(rowkey.c_str());
@@ -76,8 +78,8 @@ void NativeClientWrapper::gets(const vector<string> &rowkeys, const vector<strin
         }
         gets.push_back(get);
 
-        get_done = false;
-        hb_get_send(NativeClientWrapper::client, get, get_callback, r_buffer);
+        NativeClientWrapper::get_done = false;
+        hb_get_send(NativeClientWrapper::client, get, fptr, r_buffer);
         wait_for_get();
 
         if (r_buffer) {
