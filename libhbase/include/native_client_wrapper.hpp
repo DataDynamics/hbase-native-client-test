@@ -12,16 +12,16 @@ using namespace std;
 /**
  * Get synchronizer and callback
  */
-static volatile bool get_done;
-static pthread_cond_t get_cv;
-static pthread_mutex_t get_mutex;
+static volatile bool get_done = false;
+static pthread_cond_t get_cv = PTHREAD_COND_INITIALIZER;
+static pthread_mutex_t get_mutex = PTHREAD_MUTEX_INITIALIZER;
 
 /**
  * Client destroy synchronizer and callbacks
  */
-static volatile bool client_destroyed;
-static pthread_cond_t client_destroyed_cv;
-static pthread_mutex_t client_destroyed_mutex;
+static volatile bool client_destroyed = false;
+static pthread_cond_t client_destroyed_cv = PTHREAD_COND_INITIALIZER;
+static pthread_mutex_t client_destroyed_mutex = PTHREAD_MUTEX_INITIALIZER;
 
 class NativeClientWrapper {
 private:
