@@ -140,13 +140,13 @@ void NativeClientWrapper::get_callback(int32_t err, hb_client_t client, hb_get_t
     // bytebuffer_free(r_buffer);
     hb_get_destroy(get);
 
-    pthread_mutex_lock(&get_mutex);
-    get_done = true;
-    pthread_cond_signal(&get_cv);
-    pthread_mutex_unlock(&get_mutex);
+    pthread_mutex_lock(&NativeClientWrapper::get_mutex);
+    NativeClientWrapper::get_done = true;
+    pthread_cond_signal(&NativeClientWrapper::get_cv);
+    pthread_mutex_unlock(&NativeClientWrapper::get_mutex);
 }
 
-static void process_row(hb_result_t result) {
+void NativeClientWrapper::process_row(hb_result_t result) {
     const byte_t *key = NULL;
     size_t key_len = 0;
     hb_result_get_key(result, &key, &key_len);

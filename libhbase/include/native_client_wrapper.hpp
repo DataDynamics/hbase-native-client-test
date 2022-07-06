@@ -58,6 +58,8 @@ public:
 
     static void get_callback(int32_t err, hb_client_t client, hb_get_t get, hb_result_t result, void *extra);
 
+    static void process_row(hb_result_t result);
+
     // void setup();
 
     int32_t cleanup();
