@@ -13,29 +13,43 @@
 
 using namespace std;
 
+/**
+ * Get synchronizer and callback
+ */
+volatile bool NativeClientWrapper::get_done = false;
+pthread_cond_t NativeClientWrapper::get_cv = PTHREAD_COND_INITIALIZER;
+pthread_mutex_t NativeClientWrapper::get_mutex = PTHREAD_MUTEX_INITIALIZER;
+
+/**
+ * Client destroy synchronizer and callbacks
+ */
+volatile bool NativeClientWrapper::client_destroyed = false;
+pthread_cond_t NativeClientWrapper::client_destroyed_cv = PTHREAD_COND_INITIALIZER;
+pthread_mutex_t NativeClientWrapper::client_destroyed_mutex = PTHREAD_MUTEX_INITIALIZER;
+
 NativeClientWrapper::NativeClientWrapper(string zk_quorum, string zk_znode_parent, string table_name)
         : NativeClientWrapper(std::move(zk_quorum), std::move(zk_znode_parent), std::move(table_name), ',') {}
 
 NativeClientWrapper::NativeClientWrapper(string zk_quorum, string zk_znode_parent, string table_name, char delimiter) {
-    NativeClientWrapper::get_done = false;
-    NativeClientWrapper::get_cv = PTHREAD_COND_INITIALIZER;
-    NativeClientWrapper::get_mutex = PTHREAD_MUTEX_INITIALIZER;
+    // NativeClientWrapper::get_done = false;
+    // NativeClientWrapper::get_cv = PTHREAD_COND_INITIALIZER;
+    // NativeClientWrapper::get_mutex = PTHREAD_MUTEX_INITIALIZER;
 
-    NativeClientWrapper::client_destroyed = false;
-    NativeClientWrapper::client_destroyed_cv = PTHREAD_COND_INITIALIZER;
-    NativeClientWrapper::client_destroyed_mutex = PTHREAD_MUTEX_INITIALIZER;
+    // NativeClientWrapper::client_destroyed = false;
+    // NativeClientWrapper::client_destroyed_cv = PTHREAD_COND_INITIALIZER;
+    // NativeClientWrapper::client_destroyed_mutex = PTHREAD_MUTEX_INITIALIZER;
 
     this->zk_quorum = std::move(zk_quorum);
     this->zk_znode_parent = std::move(zk_znode_parent);
     this->table_name = std::move(table_name);
     this->table_name_len = strlen(this->table_name.c_str());
     this->delimiter = delimiter;
+    this->connection = NULL;
+    this->client = NULL;
     this->setup();
 }
 
 void NativeClientWrapper::setup() {
-    this->connection = NULL;
-    this->client = NULL;
     hb_log_set_level(HBASE_LOG_LEVEL_DEBUG); // defaults to INFO
 
     if ((this->ret_code = hb_connection_create(this->zk_quorum.c_str(), this->zk_znode_parent.c_str(),
