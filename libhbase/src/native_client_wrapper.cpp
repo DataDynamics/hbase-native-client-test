@@ -77,7 +77,7 @@ void NativeClientWrapper::gets(const vector<string> &rowkeys, const vector<strin
         }
         gets.push_back(get);
 
-        NativeClientWrapper::get_done = false;
+        get_done = false;
         hb_get_send(this->client, get, get_callback, r_buffer);
         wait_for_get();
 
@@ -87,40 +87,7 @@ void NativeClientWrapper::gets(const vector<string> &rowkeys, const vector<strin
     }
 }
 
-void NativeClientWrapper::get_callback(int32_t err, hb_client_t client, hb_get_t get, hb_result_t result, void *extra) {
-    // bytebuffer r_buffer = (bytebuffer) extra;
-    if (err == 0) {
-        // const char *table_name;
-        // size_t table_name_len;
-        // hb_result_get_table(result, &table_name, &table_name_len);
-        // HBASE_LOG_INFO("Received get callback for table=\'%.*s\'.", table_name_len, table_name);
-
-        process_row(result);
-
-        const hb_cell_t *mycell;
-        // bytebuffer qualifier = bytebuffer_strcpy("test_q1");
-        // HBASE_LOG_INFO("Looking up cell for family=\'%s\', qualifier=\'%.*s\'.", cf1->buffer, qualifier->length, qualifier->buffer);
-        // if (hb_result_get_cell(result, cf1->buffer, cf1->length, qualifier->buffer, qualifier->length, &mycell) == 0) {
-        //     HBASE_LOG_INFO("Cell found, value=\'%.*s\', timestamp=%lld.", mycell->value_len, mycell->value, mycell->ts);
-        // } else {
-        //     HBASE_LOG_ERROR("Cell not found.");
-        // }
-        // bytebuffer_free(qualifier);
-        hb_result_destroy(result);
-    } else {
-        HBASE_LOG_ERROR("Get failed with error code: %d.", err);
-    }
-
-    // bytebuffer_free(r_buffer);
-    hb_get_destroy(get);
-
-    pthread_mutex_lock(&NativeClientWrapper::get_mutex);
-    NativeClientWrapper::get_done = true;
-    pthread_cond_signal(&NativeClientWrapper::get_cv);
-    pthread_mutex_unlock(&NativeClientWrapper::get_mutex);
-}
-
-void NativeClientWrapper::process_row(hb_result_t result) {
+static void process_row(hb_result_t result) {
     const byte_t *key = NULL;
     size_t key_len = 0;
     hb_result_get_key(result, &key, &key_len);
