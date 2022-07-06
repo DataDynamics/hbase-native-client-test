@@ -19,20 +19,20 @@ NativeClientWrapper::NativeClientWrapper(string zk_quorum, string zk_znode_paren
         : NativeClientWrapper(std::move(zk_quorum), std::move(zk_znode_parent), std::move(table_name), ',') {}
 
 NativeClientWrapper::NativeClientWrapper(string zk_quorum, string zk_znode_parent, string table_name, char delimiter) {
-    this->get_done = false;
-    this->get_cv = PTHREAD_COND_INITIALIZER;
-    this->get_mutex = PTHREAD_MUTEX_INITIALIZER;
+    // this->get_done = false;
+    // this->get_cv = PTHREAD_COND_INITIALIZER;
+    // this->get_mutex = PTHREAD_MUTEX_INITIALIZER;
 
-    this->client_destroyed = false;
-    this->client_destroyed_cv = PTHREAD_COND_INITIALIZER;
-    this->client_destroyed_mutex = PTHREAD_MUTEX_INITIALIZER;
+    // this->client_destroyed = false;
+    // this->client_destroyed_cv = PTHREAD_COND_INITIALIZER;
+    // this->client_destroyed_mutex = PTHREAD_MUTEX_INITIALIZER;
 
     this->zk_quorum = std::move(zk_quorum);
     this->zk_znode_parent = std::move(zk_znode_parent);
     this->table_name = std::move(table_name);
     this->table_name_len = strlen(this->table_name.c_str());
     this->delimiter = delimiter;
-    this->get_done = false;
+    // this->get_done = false;
     // this->connection = NULL;
     // this->client = NULL;
     // this->setup();
@@ -74,8 +74,8 @@ NativeClientWrapper::~NativeClientWrapper() {
 int32_t NativeClientWrapper::cleanup() {
     if (this->client) {
         HBASE_LOG_INFO("Disconnecting client.");
-        hb_client_destroy(this->client, this->client_disconnection_callback, NULL);
-        wait_client_disconnection();
+        // hb_client_destroy(this->client, this->client_disconnection_callback, NULL);
+        // wait_client_disconnection();
     }
 
     if (this->connection) {
@@ -85,14 +85,14 @@ int32_t NativeClientWrapper::cleanup() {
     // pthread_cond_destroy(&puts_cv);
     // pthread_mutex_destroy(&puts_mutex);
 
-    pthread_cond_destroy(&this->get_cv);
-    pthread_mutex_destroy(&this->get_mutex);
+    // pthread_cond_destroy(&this->get_cv);
+    // pthread_mutex_destroy(&this->get_mutex);
 
     // pthread_cond_destroy(&del_cv);
     // pthread_mutex_destroy(&del_mutex);
 
-    pthread_cond_destroy(&this->client_destroyed_cv);
-    pthread_mutex_destroy(&this->client_destroyed_mutex);
+    // pthread_cond_destroy(&this->client_destroyed_cv);
+    // pthread_mutex_destroy(&this->client_destroyed_mutex);
 
     return this->ret_code;
 }
@@ -124,10 +124,10 @@ void NativeClientWrapper::get_callback(int32_t err, hb_client_t client, hb_get_t
     // bytebuffer_free(rowKey);
     hb_get_destroy(get);
 
-    pthread_mutex_lock(&this->get_mutex);
-    this->get_done = true;
-    pthread_cond_signal(&this->get_cv);
-    pthread_mutex_unlock(&this->get_mutex);
+    // pthread_mutex_lock(&this->get_mutex);
+    // this->get_done = true;
+    // pthread_cond_signal(&this->get_cv);
+    // pthread_mutex_unlock(&this->get_mutex);
 }
 
 void NativeClientWrapper::gets(const string &rowkeys) {
@@ -188,9 +188,9 @@ void NativeClientWrapper::gets(const vector<string> &rowkeys, const vector<strin
         }
         gets.push_back(get);
 
-        this->get_done = false;
+        // this->get_done = false;
         hb_get_send(this->client, get, this->get_callback, r_buffer);
-        this->wait_for_get();
+        // this->wait_for_get();
 
         if (r_buffer) {
             bytebuffer_free(r_buffer);
