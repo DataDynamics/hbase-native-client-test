@@ -40,7 +40,7 @@ NativeClientWrapper::NativeClientWrapper(string zk_quorum, string zk_znode_paren
 
 void NativeClientWrapper::gets(const vector<string> &rowkeys, const vector<string> &families,
                                const vector<string> &qualifiers) {
-    vector<hb_get_t> gets;
+    // vector<hb_get_t> gets;
     for (const string &rowkey: rowkeys) {
         bytebuffer r_buffer = bytebuffer_strcpy(rowkey.c_str());
         hb_get_t get = NULL;
@@ -74,7 +74,7 @@ void NativeClientWrapper::gets(const vector<string> &rowkeys, const vector<strin
                 }
             }
         }
-        gets.push_back(get);
+        // gets.push_back(get);
 
         get_done = false;
         hb_get_send(this->client, get, get_callback, r_buffer);
