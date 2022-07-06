@@ -137,7 +137,7 @@ void NativeClientWrapper::gets(const vector<string> &rowkeys, const vector<strin
         bytebuffer r_buffer = bytebuffer_strcpy(rowkey.c_str());
         hb_get_t get = NULL;
         hb_get_create(r_buffer->buffer, r_buffer->length, &get);
-        hb_get_set_table(get, this->table_name, this->table_name_len);
+        hb_get_set_table(get, this->table_name.c_str(), this->table_name_len);
         // hb_get_set_num_versions(get, 10); // up to ten versions of each column
         if (families.empty()) {
             cout << "rowkey" << "=" << rowkey << endl;
