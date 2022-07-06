@@ -94,14 +94,18 @@ public:
      *
      * @param rowkeys rowkey 목록
      */
-    void gets(const string &rowkeys);
+    void gets(const string &rowkeys) {
+        this->gets(this->split(rowkeys));
+    }
 
     /**
      * rowkey 를 지정하여 get 한다.
      *
      * @param rowkeys rowkey 목록
      */
-    void gets(const vector<string> &rowkeys);
+    void gets(const vector<string> &rowkeys) {
+        this->gets(rowkeys, this->dummy);
+    }
 
     /**
      * rowkey, column family 를 지정하여 get 한다.
@@ -109,7 +113,9 @@ public:
      * @param rowkeys rowkey 목록
      * @param families column family 목록
      */
-    void gets(const string &rowkeys, const string &families);
+    void gets(const string &rowkeys, const string &families) {
+        this->gets(this->split(rowkeys), this->split(families));
+    }
 
     /**
      * rowkey, column family 를 지정하여 get 한다.
@@ -117,7 +123,9 @@ public:
      * @param rowkeys rowkey 목록
      * @param families column family 목록
      */
-    void gets(const vector<string> &rowkeys, const vector<string> &families);
+    void gets(const vector<string> &rowkeys, const vector<string> &families) {
+        this->gets(rowkeys, families, this->dummy);
+    }
 
     /**
      * rowkey, column family, column qualifier 를 지정하여 get 한다.
@@ -126,7 +134,9 @@ public:
      * @param families column family 목록
      * @param qualifiers qualifier 목록
      */
-    void gets(const string &rowkeys, const string &families, const string &qualifiers);
+    void gets(const string &rowkeys, const string &families, const string &qualifiers) {
+        this->gets(this->split(rowkeys), this->split(families), this->split(qualifiers));
+    }
 
     /**
      * rowkey, column family, column qualifier 를 지정하여 get 한다.
@@ -136,13 +146,6 @@ public:
      * @param qualifiers qualifier 목록
      */
     void gets(const vector<string> &rowkeys, const vector<string> &families, const vector<string> &qualifiers);
-
-    /**
-     * rowkey, column family, column qualifier 를 지정하여 get 한다.
-     *
-     * @param gets get object 목록
-     */
-    void gets(const vector<hb_get_t> &gets);
 
     void process_row(hb_result_t result);
 };

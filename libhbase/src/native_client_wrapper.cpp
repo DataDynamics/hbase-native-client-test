@@ -130,26 +130,6 @@ void NativeClientWrapper::get_callback(int32_t err, hb_client_t client, hb_get_t
     // pthread_mutex_unlock(&this->get_mutex);
 }
 
-void NativeClientWrapper::gets(const string &rowkeys) {
-    this->gets(this->split(rowkeys));
-}
-
-void NativeClientWrapper::gets(const vector<string> &rowkeys) {
-    this->gets(rowkeys, this->dummy);
-}
-
-void NativeClientWrapper::gets(const string &rowkeys, const string &families) {
-    this->gets(this->split(rowkeys), this->split(families));
-}
-
-void NativeClientWrapper::gets(const vector<string> &rowkeys, const vector<string> &families) {
-    this->gets(rowkeys, families, this->dummy);
-}
-
-void NativeClientWrapper::gets(const string &rowkeys, const string &families, const string &qualifiers) {
-    this->gets(this->split(rowkeys), this->split(families), this->split(qualifiers));
-}
-
 void NativeClientWrapper::gets(const vector<string> &rowkeys, const vector<string> &families,
                                const vector<string> &qualifiers) {
     vector<hb_get_t> gets;
