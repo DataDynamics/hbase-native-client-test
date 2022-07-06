@@ -74,7 +74,7 @@ NativeClientWrapper::~NativeClientWrapper() {
 int32_t NativeClientWrapper::cleanup() {
     if (this->client) {
         HBASE_LOG_INFO("Disconnecting client.");
-        hb_client_destroy(this->client, client_disconnection_callback, NULL);
+        hb_client_destroy(this->client, this->client_disconnection_callback, NULL);
         wait_client_disconnection();
     }
 
@@ -189,7 +189,7 @@ void NativeClientWrapper::gets(const vector<string> &rowkeys, const vector<strin
         gets.push_back(get);
 
         this->get_done = false;
-        hb_get_send(this->client, get, get_callback, r_buffer);
+        hb_get_send(this->client, get, this->get_callback, r_buffer);
         this->wait_for_get();
 
         if (r_buffer) {
