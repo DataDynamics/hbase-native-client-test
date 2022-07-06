@@ -6,7 +6,7 @@ set(CMAKE_CXX_COMPILER /opt/rh/devtoolset-7/root/bin/g++)
 set(CMAKE_CXX_STANDARD 11)
 set(D_GLIBCXX_USE_CXX11_ABI 0)
 
-set(CMAKE_CXX_FLAGS "-std=c++0x ${CMAKE_CXX_FLAGS} -g -ftest-coverage -fprofile-arcs")
+set(CMAKE_CXX_FLAGS "-std=c++0x ${CMAKE_CXX_FLAGS} -g -ftest-coverage -fprofile-arcs -fpermissive")
 
 include_directories(
   /home/ddadmin/Downloads/libhbase/src/main/native/include
