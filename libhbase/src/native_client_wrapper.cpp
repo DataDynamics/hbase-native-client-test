@@ -8,6 +8,8 @@
 
 #include "byte_buffer.h"
 
+#line __LINE__ "native_client_wrapper.cpp"
+
 #define CHECK_API_ERROR(retCode, ...) \
     HBASE_LOG_MSG((retCode ? HBASE_LOG_LEVEL_ERROR : HBASE_LOG_LEVEL_INFO), __VA_ARGS__, retCode);
 
@@ -154,16 +156,19 @@ void NativeClientWrapper::gets(const vector<string> &rowkeys, const vector<strin
         hb_get_set_table(get, this->table_name.c_str(), this->table_name_len);
         // hb_get_set_num_versions(get, 10); // up to ten versions of each column
         if (families.empty()) {
-            cout << "rowkey" << "=" << rowkey << endl;
+            HBASE_LOG_DEBUG("row=%s", rowkey.c_str());
+            // cout << "rowkey" << "=" << rowkey << endl;
         } else {
             for (const string &family: families) {
                 bytebuffer f_buffer = bytebuffer_strcpy(family.c_str());
                 if (qualifiers.empty()) {
-                    cout << "rowkey:family" << "=" << rowkey << ":" << family << endl;
+                    HBASE_LOG_DEBUG("rowkey:family=%s:%s", rowkey.c_str(), family.c_str());
+                    // cout << "rowkey:family" << "=" << rowkey << ":" << family << endl;
                     hb_get_add_column(get, f_buffer->buffer, f_buffer->length, NULL, 0);
                 } else {
                     for (const string &qualifier: qualifiers) {
-                        cout << "rowkey:family:qualifier" << "=" << rowkey << ":" << family << ":" << qualifier << endl;
+                        HBASE_LOG_DEBUG("rowkey:family:qualifier=%s:%s:%s", rowkey.c_str(), family.c_str(), qualifier.c_str());
+                        // cout << "rowkey:family:qualifier" << "=" << rowkey << ":" << family << ":" << qualifier << endl;
                         bytebuffer q_buffer = bytebuffer_strcpy(qualifier.c_str());
                         hb_get_add_column(get, f_buffer->buffer, f_buffer->length, q_buffer->buffer, q_buffer->length);
                         if (q_buffer) {
