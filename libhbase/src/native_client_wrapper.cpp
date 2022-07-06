@@ -89,15 +89,12 @@ void NativeClientWrapper::get_callback(int32_t err, hb_client_t client, hb_get_t
 
         const hb_cell_t *mycell;
         bytebuffer qualifier = bytebuffer_strcpy("test_q1");
-        HBASE_LOG_INFO("Looking up cell for family=\'%s\', qualifier=\'%.*s\'.",
-                       cf1->buffer, qualifier->length, qualifier->buffer);
-        if (hb_result_get_cell(result, cf1->buffer, cf1->length, qualifier->buffer,
-                               qualifier->length, &mycell) == 0) {
-            HBASE_LOG_INFO("Cell found, value=\'%.*s\', timestamp=%lld.",
-                           mycell->value_len, mycell->value, mycell->ts);
-        } else {
-            HBASE_LOG_ERROR("Cell not found.");
-        }
+        // HBASE_LOG_INFO("Looking up cell for family=\'%s\', qualifier=\'%.*s\'.", cf1->buffer, qualifier->length, qualifier->buffer);
+        // if (hb_result_get_cell(result, cf1->buffer, cf1->length, qualifier->buffer, qualifier->length, &mycell) == 0) {
+        //     HBASE_LOG_INFO("Cell found, value=\'%.*s\', timestamp=%lld.", mycell->value_len, mycell->value, mycell->ts);
+        // } else {
+        //     HBASE_LOG_ERROR("Cell not found.");
+        // }
         bytebuffer_free(qualifier);
         hb_result_destroy(result);
     } else {
