@@ -41,7 +41,7 @@ NativeClientWrapper::NativeClientWrapper(string zk_quorum, string zk_znode_paren
 void NativeClientWrapper::gets(const vector<string> &rowkeys, const vector<string> &families,
                                const vector<string> &qualifiers) {
     // void *(*fptr)(int32_t, hb_client_t, hb_get_t, hb_result_t, void *) = get_callback;
-    void *(*fptr)(int32_t, void *, void *, void *, void *) = get_callback;
+    void (*fptr)(int32_t, void *, void *, void *, void *) = get_callback;
 
     vector<hb_get_t> gets;
     for (const string &rowkey: rowkeys) {
