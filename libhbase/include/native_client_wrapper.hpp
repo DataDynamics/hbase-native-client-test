@@ -145,3 +145,17 @@ public:
 
     void process_row(hb_result_t result);
 };
+
+/**
+ * Get synchronizer and callback
+ */
+volatile bool NativeClientWrapper::get_done = false;
+pthread_cond_t NativeClientWrapper::get_cv = PTHREAD_COND_INITIALIZER;
+pthread_mutex_t NativeClientWrapper::get_mutex = PTHREAD_MUTEX_INITIALIZER;
+
+/**
+ * Client destroy synchronizer and callbacks
+ */
+volatile bool NativeClientWrapper::client_destroyed = false;
+pthread_cond_t NativeClientWrapper::client_destroyed_cv = PTHREAD_COND_INITIALIZER;
+pthread_mutex_t NativeClientWrapper::client_destroyed_mutex = PTHREAD_MUTEX_INITIALIZER;
