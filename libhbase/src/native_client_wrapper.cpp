@@ -53,14 +53,14 @@ int32_t NativeClientWrapper::cleanup() {
     // pthread_cond_destroy(&puts_cv);
     // pthread_mutex_destroy(&puts_mutex);
 
-    pthread_cond_destroy(&NativeClientWrapper::get_cv);
-    pthread_mutex_destroy(&NativeClientWrapper::get_mutex);
+    pthread_cond_destroy(&get_cv);
+    pthread_mutex_destroy(&get_mutex);
 
     // pthread_cond_destroy(&del_cv);
     // pthread_mutex_destroy(&del_mutex);
 
-    pthread_cond_destroy(&NativeClientWrapper::client_destroyed_cv);
-    pthread_mutex_destroy(&NativeClientWrapper::client_destroyed_mutex);
+    pthread_cond_destroy(&client_destroyed_cv);
+    pthread_mutex_destroy(&client_destroyed_mutex);
 
     return this->ret_code;
 }
