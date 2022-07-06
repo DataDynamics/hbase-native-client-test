@@ -39,32 +39,6 @@ NativeClientWrapper::NativeClientWrapper(string zk_quorum, string zk_znode_paren
     }
 }
 
-int32_t NativeClientWrapper::cleanup() {
-    if (this->client) {
-        HBASE_LOG_INFO("Disconnecting client.");
-        // hb_client_destroy(this->client, this->client_disconnection_callback, NULL);
-        // wait_client_disconnection();
-    }
-
-    if (this->connection) {
-        hb_connection_destroy(this->connection);
-    }
-
-    // pthread_cond_destroy(&puts_cv);
-    // pthread_mutex_destroy(&puts_mutex);
-
-    pthread_cond_destroy(&get_cv);
-    pthread_mutex_destroy(&get_mutex);
-
-    // pthread_cond_destroy(&del_cv);
-    // pthread_mutex_destroy(&del_mutex);
-
-    pthread_cond_destroy(&client_destroyed_cv);
-    pthread_mutex_destroy(&client_destroyed_mutex);
-
-    return this->ret_code;
-}
-
 void NativeClientWrapper::gets(const vector<string> &rowkeys, const vector<string> &families,
                                const vector<string> &qualifiers) {
     vector<hb_get_t> gets;

@@ -62,7 +62,31 @@ public:
 
     // void setup();
 
-    int32_t cleanup();
+    int32_t cleanup() {
+        if (this->client) {
+            HBASE_LOG_INFO("Disconnecting client.");
+            // hb_client_destroy(this->client, this->client_disconnection_callback, NULL);
+            // wait_client_disconnection();
+        }
+
+        if (this->connection) {
+            hb_connection_destroy(this->connection);
+        }
+
+        // pthread_cond_destroy(&puts_cv);
+        // pthread_mutex_destroy(&puts_mutex);
+
+        pthread_cond_destroy(&get_cv);
+        pthread_mutex_destroy(&get_mutex);
+
+        // pthread_cond_destroy(&del_cv);
+        // pthread_mutex_destroy(&del_mutex);
+
+        pthread_cond_destroy(&client_destroyed_cv);
+        pthread_mutex_destroy(&client_destroyed_mutex);
+
+        return this->ret_code;
+    }
 
     /**
      * rowkey 를 지정하여 get 한다.
