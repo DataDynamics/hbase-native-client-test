@@ -166,7 +166,7 @@ public:
      * @param families column family 목록
      */
     void gets(const vector<string> &rowkeys, const vector<string> &families) {
-        this->gets(rowkeys, families, this->dummy);
+        gets(rowkeys, families, this->dummy);
     }
 
     /**
@@ -177,7 +177,7 @@ public:
      * @param qualifiers qualifier 목록
      */
     void gets(const string &rowkeys, const string &families, const string &qualifiers) {
-        this->gets(this->split(rowkeys), this->split(families), this->split(qualifiers));
+        gets(this->split(rowkeys), this->split(families), this->split(qualifiers));
     }
 
     /**
@@ -187,7 +187,7 @@ public:
      * @param families column family 목록
      * @param qualifiers qualifier 목록
      */
-    void gets(const vector<string> &rowkeys, const vector<string> &families, const vector<string> &qualifiers);
+    static void gets(const vector<string> &rowkeys, const vector<string> &families, const vector<string> &qualifiers);
 };
 
 static void wait_for_get() {
