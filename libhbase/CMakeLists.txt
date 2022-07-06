@@ -1,5 +1,5 @@
-cmake_minimum_required(VERSION 2.8)
-project(libhbase_wrapper LANGUAGES CXX)
+cmake_minimum_required(VERSION 3.0)
+project(libhbase_wrapper LANGUAGES CXX VERSION 1.0.0)
 
 set(CMAKE_C_COMPILER /opt/rh/devtoolset-7/root/bin/gcc)
 set(CMAKE_CXX_COMPILER /opt/rh/devtoolset-7/root/bin/g++)
