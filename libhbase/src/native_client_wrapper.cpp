@@ -21,8 +21,8 @@ NativeClientWrapper::NativeClientWrapper(string zk_quorum, string zk_znode_paren
 NativeClientWrapper::NativeClientWrapper(string zk_quorum, string zk_znode_parent, string table_name, char delimiter) {
     this->zk_quorum = std::move(zk_quorum);
     this->zk_znode_parent = std::move(zk_znode_parent);
-    this->table_name = std::move(table_name);
-    this->table_name_len = strlen(this->table_name.c_str());
+    NativeClientWrapper::table_name = std::move(table_name);
+    NativeClientWrapper::table_name_len = strlen(NativeClientWrapper::table_name.c_str());
     this->delimiter = delimiter;
     hb_log_set_level(HBASE_LOG_LEVEL_DEBUG); // defaults to INFO
 
@@ -46,7 +46,7 @@ void NativeClientWrapper::gets(const vector<string> &rowkeys, const vector<strin
         bytebuffer r_buffer = bytebuffer_strcpy(rowkey.c_str());
         hb_get_t get = NULL;
         hb_get_create(r_buffer->buffer, r_buffer->length, &get);
-        hb_get_set_table(get, this->table_name.c_str(), this->table_name_len);
+        hb_get_set_table(get, table_name.c_str(), table_name_len);
         // hb_get_set_num_versions(get, 10); // up to ten versions of each column
         if (families.empty()) {
             HBASE_LOG_DEBUG("row=%s", rowkey.c_str());

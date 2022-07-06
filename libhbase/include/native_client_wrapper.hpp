@@ -29,8 +29,8 @@ private:
     int32_t ret_code = 0;
     string zk_quorum;
     string zk_znode_parent;
-    string table_name;
-    size_t table_name_len;
+    static string table_name;
+    static size_t table_name_len;
     char delimiter;
     vector<string> dummy;
 
