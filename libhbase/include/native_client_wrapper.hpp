@@ -7,8 +7,7 @@
 
 using namespace std;
 
-#define CHECK_API_ERROR(retCode, ...) \
-    HBASE_LOG_MSG((retCode ? HBASE_LOG_LEVEL_ERROR : HBASE_LOG_LEVEL_INFO), __VA_ARGS__, retCode);
+#define CHECK_API_ERROR(retCode, ...) HBASE_LOG_MSG((retCode ? HBASE_LOG_LEVEL_ERROR : HBASE_LOG_LEVEL_INFO), __VA_ARGS__, retCode);
 
 /**
  * Get synchronizer and callback

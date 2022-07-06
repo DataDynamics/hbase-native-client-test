@@ -10,19 +10,18 @@
 
 #line __LINE__ "src/native_client_wrapper.cpp"
 
-#define CHECK_API_ERROR(retCode, ...) \
-    HBASE_LOG_MSG((retCode ? HBASE_LOG_LEVEL_ERROR : HBASE_LOG_LEVEL_INFO), __VA_ARGS__, retCode);
+#define CHECK_API_ERROR(retCode, ...) HBASE_LOG_MSG((retCode ? HBASE_LOG_LEVEL_ERROR : HBASE_LOG_LEVEL_INFO), __VA_ARGS__, retCode);
 
 using namespace std;
 
-NativeClientWrapper::NativeClientWrapper(string zk_quorum, string zk_znode_parent, string table_name)
-        : NativeClientWrapper(std::move(zk_quorum), std::move(zk_znode_parent), std::move(table_name), ',') {}
+NativeClientWrapper::NativeClientWrapper(string zk_quorum, string zk_znode_parent, string table_name_)
+        : NativeClientWrapper(std::move(zk_quorum), std::move(zk_znode_parent), std::move(table_name_), ',') {}
 
-NativeClientWrapper::NativeClientWrapper(string zk_quorum, string zk_znode_parent, string table_name, char delimiter) {
+NativeClientWrapper::NativeClientWrapper(string zk_quorum, string zk_znode_parent, string table_name_, char delimiter) {
     this->zk_quorum = std::move(zk_quorum);
     this->zk_znode_parent = std::move(zk_znode_parent);
-    NativeClientWrapper::table_name = std::move(table_name);
-    NativeClientWrapper::table_name_len = strlen(NativeClientWrapper::table_name.c_str());
+    table_name = std::move(table_name_);
+    table_name_len = strlen(table_name.c_str());
     this->delimiter = delimiter;
     hb_log_set_level(HBASE_LOG_LEVEL_DEBUG); // defaults to INFO
 
@@ -33,7 +32,7 @@ NativeClientWrapper::NativeClientWrapper(string zk_quorum, string zk_znode_paren
     }
 
     HBASE_LOG_INFO("Connecting to HBase cluster using Zookeeper ensemble '%s'.", this->zk_quorum.c_str());
-    if ((this->ret_code = hb_client_create(this->connection, &NativeClientWrapper::client)) != 0) {
+    if ((this->ret_code = hb_client_create(this->connection, &client)) != 0) {
         HBASE_LOG_ERROR("Could not connect to HBase cluster : errorCode = %d.", this->ret_code);
         this->cleanup();
     }
