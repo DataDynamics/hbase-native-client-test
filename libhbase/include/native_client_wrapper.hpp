@@ -82,8 +82,11 @@ public:
         // bytebuffer_free(r_buffer);
         hb_get_destroy(get);
 
+        HBASE_LOG_DEBUG("get_callback mutex try lock");
         pthread_mutex_lock(&get_mutex);
+        HBASE_LOG_DEBUG("get_callback mutex locked");
         get_done = true;
+        HBASE_LOG_DEBUG("get_callback get_done=%s", get_done);
         pthread_cond_signal(&get_cv);
         pthread_mutex_unlock(&get_mutex);
     }
