@@ -76,9 +76,9 @@ void NativeClientWrapper::gets(const vector <string> &rowkeys, const vector <str
         }
         // gets.push_back(get);
 
-        // NativeClientWrapper::get_done = false;
-        // hb_get_send(this->client, get, get_callback, r_buffer);
-        // wait_for_get();
+        NativeClientWrapper::get_done = false;
+        hb_get_send(this->client, get, get_callback, r_buffer);
+        wait_for_get();
 
         if (r_buffer) {
             bytebuffer_free(r_buffer);
