@@ -17,6 +17,8 @@ include_directories(
   /home/ddadmin/Downloads/libhbase/src/main/native/include
   /home/ddadmin/Downloads/libhbase/src/test/native/common
   /home/ddadmin/Downloads/libhbase/target/gtest-1.7.0/include
+  /usr/lib/jvm/java-1.8.0-openjdk/include
+  /usr/lib/jvm/java-1.8.0-openjdk/include/linux
   /usr/local/lib64
   ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
