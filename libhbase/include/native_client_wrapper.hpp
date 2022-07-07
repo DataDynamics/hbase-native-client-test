@@ -208,13 +208,13 @@ public:
 /**
  * Get synchronizer and callback
  */
-NativeClientWrapper::get_done = false;
-NativeClientWrapper::get_cv = PTHREAD_COND_INITIALIZER;
-NativeClientWrapper::get_mutex = PTHREAD_MUTEX_INITIALIZER;
+bool NativeClientWrapper::get_done = false;
+pthread_cond_t NativeClientWrapper::get_cv = PTHREAD_COND_INITIALIZER;
+pthread_mutex_t NativeClientWrapper::get_mutex = PTHREAD_MUTEX_INITIALIZER;
 
 /**
  * Client destroy synchronizer and callbacks
  */
-NativeClientWrapper::client_destroyed = false;
-NativeClientWrapper::client_destroyed_cv = PTHREAD_COND_INITIALIZER;
-NativeClientWrapper::client_destroyed_mutex = PTHREAD_MUTEX_INITIALIZER;
+bool NativeClientWrapper::client_destroyed = false;
+pthread_cond_t NativeClientWrapper::client_destroyed_cv = PTHREAD_COND_INITIALIZER;
+pthread_mutex_t NativeClientWrapper::client_destroyed_mutex = PTHREAD_MUTEX_INITIALIZER;
