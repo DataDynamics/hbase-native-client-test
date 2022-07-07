@@ -55,6 +55,10 @@ public:
         this->cleanup();
     }
 
+    void get_callback(int32_t err, hb_client_t client, hb_get_t get, hb_result_t result, void *extra);
+
+    void process_row(hb_result_t result);
+
     static void wait_for_get() {
         HBASE_LOG_INFO("Waiting for get operation to complete.");
         pthread_mutex_lock(&get_mutex);
