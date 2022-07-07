@@ -94,6 +94,7 @@ public:
         HBASE_LOG_INFO("Waiting for get operation to complete.");
         pthread_mutex_lock(&get_mutex);
         while (!get_done) {
+            HBASE_LOG_INFO("Waiting for get operation to complete. get_done=%s", get_done);
             pthread_cond_wait(&get_cv, &get_mutex);
         }
         pthread_mutex_unlock(&get_mutex);
