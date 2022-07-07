@@ -86,7 +86,7 @@ void NativeClientWrapper::gets(const vector <string> &rowkeys, const vector <str
     }
 }
 
-void NativeClientWrapper::get_callback(int32_t err, hb_client_t client, hb_get_t get, hb_result_t result, void *extra) {
+void get_callback(int32_t err, hb_client_t client, hb_get_t get, hb_result_t result, void *extra) {
     // bytebuffer r_buffer = (bytebuffer) extra;
     HBASE_LOG_DEBUG("get_callback err=%d", err);
     if (err == 0) {
@@ -123,7 +123,7 @@ void NativeClientWrapper::get_callback(int32_t err, hb_client_t client, hb_get_t
     pthread_mutex_unlock(&get_mutex);
 }
 
-void NativeClientWrapper::process_row(hb_result_t result) {
+void process_row(hb_result_t result) {
     const byte_t *key = NULL;
     size_t key_len = 0;
     hb_result_get_key(result, &key, &key_len);
