@@ -93,6 +93,7 @@ public:
     static void wait_for_get() {
         HBASE_LOG_INFO("Waiting for get operation to complete.");
         pthread_mutex_lock(&get_mutex);
+        HBASE_LOG_DEBUG("Waiting for get operation to complete. mutex locked");
         while (!get_done) {
             HBASE_LOG_DEBUG("Waiting for get operation to complete. get_done=%s", get_done);
             pthread_cond_wait(&get_cv, &get_mutex);
