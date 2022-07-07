@@ -87,7 +87,7 @@ public:
         pthread_mutex_lock(&get_mutex);
         HBASE_LOG_DEBUG("get_callback mutex locked");
         get_done = true;
-        HBASE_LOG_DEBUG("get_callback get_done=%s", get_done);
+        HBASE_LOG_DEBUG("get_callback get_done=%B", get_done);
         pthread_cond_signal(&get_cv);
         pthread_mutex_unlock(&get_mutex);
     }
@@ -99,7 +99,7 @@ public:
         pthread_mutex_lock(&get_mutex);
         HBASE_LOG_DEBUG("Waiting for get operation to complete. mutex locked");
         while (!get_done) {
-            HBASE_LOG_DEBUG("Waiting for get operation to complete. get_done=%s", get_done);
+            HBASE_LOG_DEBUG("Waiting for get operation to complete. get_done=%B", get_done);
             pthread_cond_wait(&get_cv, &get_mutex);
         }
         pthread_mutex_unlock(&get_mutex);
