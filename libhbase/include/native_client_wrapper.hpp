@@ -36,16 +36,16 @@ public:
     /**
      * Get synchronizer and callback
      */
-    static volatile bool get_done = false;
-    static pthread_cond_t get_cv = PTHREAD_COND_INITIALIZER;
-    static pthread_mutex_t get_mutex = PTHREAD_MUTEX_INITIALIZER;
+    static volatile bool get_done;
+    static pthread_cond_t get_cv;
+    static pthread_mutex_t get_mutex;
 
     /**
      * Client destroy synchronizer and callbacks
      */
-    static volatile bool client_destroyed = false;
-    static pthread_cond_t client_destroyed_cv = PTHREAD_COND_INITIALIZER;
-    static pthread_mutex_t client_destroyed_mutex = PTHREAD_MUTEX_INITIALIZER;
+    static volatile bool client_destroyed;
+    static pthread_cond_t client_destroyed_cv;
+    static pthread_mutex_t client_destroyed_mutex;
 
     explicit NativeClientWrapper(string zk_quorum, string zk_znode_parent, string table_name);
 
@@ -204,3 +204,17 @@ public:
      */
     void gets(const vector<string> &rowkeys, const vector<string> &families, const vector<string> &qualifiers);
 };
+
+/**
+ * Get synchronizer and callback
+ */
+NativeClientWrapper::get_done = false;
+NativeClientWrapper::get_cv = PTHREAD_COND_INITIALIZER;
+NativeClientWrapper::get_mutex = PTHREAD_MUTEX_INITIALIZER;
+
+/**
+ * Client destroy synchronizer and callbacks
+ */
+NativeClientWrapper::client_destroyed = false;
+NativeClientWrapper::client_destroyed_cv = PTHREAD_COND_INITIALIZER;
+NativeClientWrapper::client_destroyed_mutex = PTHREAD_MUTEX_INITIALIZER;
