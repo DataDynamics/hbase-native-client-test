@@ -57,6 +57,7 @@ public:
 
     static void get_callback(int32_t err, hb_client_t client, hb_get_t get, hb_result_t result, void *extra) {
         // bytebuffer r_buffer = (bytebuffer) extra;
+        HBASE_LOG_DEBUG("get_callback err=%d", err);
         if (err == 0) {
             // const char *table_name;
             // size_t table_name_len;
