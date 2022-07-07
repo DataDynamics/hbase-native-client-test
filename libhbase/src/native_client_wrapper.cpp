@@ -168,7 +168,10 @@ int main(int argc, char **argv) {
     // wrapper.gets(rowkeys_arg, cfs_arg);
     // wrapper.gets(rowkeys_arg, cfs_arg, qs_arg);
 
+    HBASE_LOG_INFO("try 1");
     wrapper.gets(rowkeys);
+    HBASE_LOG_INFO("try 2");
     wrapper.gets(rowkeys, cfs);
+    HBASE_LOG_INFO("try 3");
     wrapper.gets(rowkeys, cfs, qs);
 }
