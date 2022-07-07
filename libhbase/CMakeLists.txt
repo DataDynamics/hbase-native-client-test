@@ -20,7 +20,7 @@ include_directories(
   /usr/lib/jvm/java-1.8.0-openjdk/include
   /usr/lib/jvm/java-1.8.0-openjdk/include/linux
 #   /usr/local/lib64
-#   ${CMAKE_CURRENT_SOURCE_DIR}/include
+  ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 
 FIND_LIBRARY(GTEST_LIBS NAMES libgtest.so PATHS /home/ddadmin/Downloads/libhbase/target/gtest-1.7.0)
