@@ -28,13 +28,15 @@ FIND_LIBRARY(HBASE_LIBS NAMES libhbase.so PATHS /home/ddadmin/Downloads/libhbase
 FIND_LIBRARY(JVM_LIBS NAMES libjvm.so PATHS /usr/lib/jvm/java-1.8.0-openjdk/jre/lib/amd64/server)
 FIND_LIBRARY(BYTE_BUFFER_LIBS NAMES libbytebuffer.so PATHS /home/ddadmin/Downloads/libhbase-dd/src/test/native/common)
 
-add_executable(libhbase_wrapper_example src/main.cpp)
+#add_executable(libhbase_wrapper_example src/main.cpp)
 add_executable(libhbase_wrapper src/native_client_wrapper.cpp)
-add_library(libhbaseclient SHARED src/native_client_wrapper.cpp)
+#add_library(libhbaseclient SHARED src/native_client_wrapper.cpp)
+add_library(libhbaseclient STATIC src/native_client_wrapper.cpp)
 
 #install(TARGETS libhbaseclient DESTINATION /usr/local/lib64)
 #install(FILES include/native_client_wrapper.hpp DESTINATION include)
 
 #target_link_libraries(libhbase_wrapper LINK_PUBLIC ${GTEST_LIBS} ${HBASE_LIBS} ${JVM_LIBS} ${BYTE_BUFFER_LIBS})
-target_link_libraries(libhbase_wrapper_example LINK_PUBLIC ${GTEST_LIBS} ${HBASE_LIBS} ${JVM_LIBS} ${BYTE_BUFFER_LIBS})
-target_link_libraries(libhbase_wrapper LINK_PUBLIC ${HBASE_LIBS} ${JVM_LIBS} ${BYTE_BUFFER_LIBS})
+#target_link_libraries(libhbase_wrapper_example LINK_PUBLIC ${GTEST_LIBS} ${HBASE_LIBS} ${JVM_LIBS} ${BYTE_BUFFER_LIBS})
+#target_link_libraries(libhbase_wrapper LINK_PUBLIC ${HBASE_LIBS} ${JVM_LIBS} ${BYTE_BUFFER_LIBS})
+target_link_libraries(libhbase_wrapper PUBLIC libhbaseclient)
