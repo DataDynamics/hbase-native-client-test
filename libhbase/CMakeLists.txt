@@ -25,7 +25,7 @@ include_directories(
 
 FIND_LIBRARY(GTEST_LIBS NAMES libgtest.so PATHS /home/ddadmin/Downloads/libhbase-dd/target/gtest-1.7.0)
 FIND_LIBRARY(HBASE_LIBS NAMES libhbase.so PATHS /home/ddadmin/Downloads/libhbase-dd/target/libhbase-1.0-SNAPSHOT/lib/native)
-FIND_LIBRARY(JVM_LIBS NAMES libjvm.so PATHS /usr/lib/jvm/java-1.8.0-openjdk/jre/lib/amd64/server)
+FIND_LIBRARY(JVM_LIBS NAMES libjvm.so PATHS $ENV{JAVA_HOME}/jre/lib/amd64/server)
 FIND_LIBRARY(BYTE_BUFFER_LIBS NAMES libbytebuffer.so PATHS /home/ddadmin/Downloads/libhbase-dd/src/test/native/common)
 
 #add_executable(libhbase_wrapper_example src/main.cpp)
