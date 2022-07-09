@@ -24,7 +24,7 @@ NativeClientWrapper::NativeClientWrapper(string zk_quorum, string zk_znode_paren
     this->table_name_len = strlen(table_name.c_str());
     this->delimiter = delimiter;
     // hb_log_set_level(HBASE_LOG_LEVEL_DEBUG);// defaults to DEBUG
-    hb_log_set_level(HBASE_LOG_LEVEL_ERROR);
+    hb_log_set_level(HBASE_LOG_LEVEL_INFO);
 
     if ((this->ret_code = hb_connection_create(this->zk_quorum.c_str(), this->zk_znode_parent.c_str(),
                                                &this->connection)) != 0) {
