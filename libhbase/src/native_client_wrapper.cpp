@@ -7,6 +7,13 @@
 
 using namespace std;
 
+NativeClientWrapper::NativeClientWrapper(string zk_quorum, string zk_znode_parent, string table_name_)
+        : NativeClientWrapper(
+        std::move(zk_quorum),
+        std::move(zk_znode_parent),
+        std::move(table_name_),
+        ',') {}
+
 NativeClientWrapper::NativeClientWrapper(string zk_quorum, string zk_znode_parent, string table_name_, char delimiter) {
     this->zk_quorum = std::move(zk_quorum);
     this->zk_znode_parent = std::move(zk_znode_parent);

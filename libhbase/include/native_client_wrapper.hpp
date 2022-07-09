@@ -50,12 +50,13 @@ public:
     static pthread_cond_t client_destroyed_cv;
     static pthread_mutex_t client_destroyed_mutex;
 
-    NativeClientWrapper(string zk_quorum, string zk_znode_parent, string table_name_)
-            : NativeClientWrapper(
-            std::move(zk_quorum),
-            std::move(zk_znode_parent),
-            std::move(table_name_),
-            ',') {}
+    NativeClientWrapper(string zk_quorum, string zk_znode_parent, string table_name_);
+    // NativeClientWrapper(string zk_quorum, string zk_znode_parent, string table_name_)
+    //         : NativeClientWrapper(
+    //         std::move(zk_quorum),
+    //         std::move(zk_znode_parent),
+    //         std::move(table_name_),
+    //         ',') {}
 
     NativeClientWrapper(string zk_quorum, string zk_znode_parent, string table_name_, char delimiter);
     // NativeClientWrapper(string zk_quorum, string zk_znode_parent, string table_name_, char delimiter) {
