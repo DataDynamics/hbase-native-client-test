@@ -92,6 +92,50 @@ void NativeClientWrapper::process_row(hb_result_t result) {
     }
 }
 
+void NativeClientWrapper::gets(const vector<string> &rowkeys, const vector<string> &families,
+                               const vector<string> &qualifiers) {
+    // vector<hb_get_t> gets;
+    for (const string &rowkey: rowkeys) {
+        bytebuffer r_buffer = bytebuffer_strcpy(rowkey.c_str());
+        hb_get_t get = nullptr;
+        hb_get_create(r_buffer->buffer, r_buffer->length, &get);
+        hb_get_set_table(get, table_name.c_str(), table_name_len);
+        // hb_get_set_num_versions(get, 10); // up to ten versions of each column
+        if (families.empty()) {
+            HBASE_LOG_DEBUG("row=%s", rowkey.c_str());
+            // cout << "rowkey" << "=" << rowkey << endl;
+        } else {
+            for (const string &family: families) {
+                bytebuffer f_buffer = bytebuffer_strcpy(family.c_str());
+                if (qualifiers.empty()) {
+                    HBASE_LOG_DEBUG("rowkey:family=%s:%s", rowkey.c_str(), family.c_str());
+                    // cout << "rowkey:family" << "=" << rowkey << ":" << family << endl;
+                    hb_get_add_column(get, f_buffer->buffer, f_buffer->length, nullptr, 0);
+                } else {
+                    for (const string &qualifier: qualifiers) {
+                        HBASE_LOG_DEBUG("rowkey:family:qualifier=%s:%s:%s", rowkey.c_str(), family.c_str(),
+                                        qualifier.c_str());
+                        // cout << "rowkey:family:qualifier" << "=" << rowkey << ":" << family << ":" << qualifier << endl;
+                        bytebuffer q_buffer = bytebuffer_strcpy(qualifier.c_str());
+                        hb_get_add_column(get, f_buffer->buffer, f_buffer->length, q_buffer->buffer,
+                                          q_buffer->length);
+                        bytebuffer_free(q_buffer);
+                    }
+                }
+                if (f_buffer) {
+                    bytebuffer_free(f_buffer);
+                }
+            }
+        }
+        // gets.push_back(get);
+
+        NativeClientWrapper::get_done = false;
+        hb_get_send(this->client, get, get_callback, r_buffer);
+        wait_for_get();
+        bytebuffer_free(r_buffer);
+    }
+}
+
 int main(int argc, char **argv) {
     const char *zk_quorum_arg = "adm1.hdp.io,hdm1.hdp.io,hdm2.hdp.io";
     const char *zk_znode_parent_arg = "/hbase-unsecure";
