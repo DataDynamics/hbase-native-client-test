@@ -22,8 +22,8 @@ private:
     char delimiter;
     vector<string> dummy;
 
-    hb_connection_t connection{};
-    hb_client_t client{};
+    hb_connection_t connection;
+    hb_client_t client;
 
     vector<string> split(const string &input) const {
         vector<string> answer;
