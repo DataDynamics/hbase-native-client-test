@@ -23,12 +23,12 @@ set(CMAKE_CXX_FLAGS "-std=c++0x ${CMAKE_CXX_FLAGS} -g -ftest-coverage -fprofile-
 #  ${CMAKE_CURRENT_SOURCE_DIR}/include
 #)
 include_directories(
-  /home/ddadmin/Downloads/libhbase-dd/src/main/native/include
-  /home/ddadmin/Downloads/libhbase-dd/src/test/native/common
-  /home/ddadmin/Downloads/libhbase-dd/target/gtest-1.7.0/include
+#  /home/ddadmin/Downloads/libhbase-dd/src/main/native/include
+#  /home/ddadmin/Downloads/libhbase-dd/src/test/native/common
+#  /home/ddadmin/Downloads/libhbase-dd/target/gtest-1.7.0/include
   $ENV{JAVA_HOME}/include
   $ENV{JAVA_HOME}/include/linux
-  /usr/local/lib64
+#  /usr/local/lib64
   ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 
