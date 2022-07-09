@@ -20,6 +20,8 @@ NativeClientWrapper::NativeClientWrapper(string zk_quorum, string zk_znode_paren
     this->table_name = std::move(table_name_);
     this->table_name_len = strlen(table_name.c_str());
     this->delimiter = delimiter;
+    this->connection = {};
+    this->client = {};
     // hb_log_set_level(HBASE_LOG_LEVEL_DEBUG);// defaults to DEBUG
     hb_log_set_level(HBASE_LOG_LEVEL_INFO);
 
