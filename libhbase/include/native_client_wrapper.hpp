@@ -57,27 +57,28 @@ public:
             std::move(table_name_),
             ',') {}
 
-    NativeClientWrapper(string zk_quorum, string zk_znode_parent, string table_name_, char delimiter) {
-        this->zk_quorum = std::move(zk_quorum);
-        this->zk_znode_parent = std::move(zk_znode_parent);
-        this->table_name = std::move(table_name_);
-        this->table_name_len = strlen(table_name.c_str());
-        this->delimiter = delimiter;
-        // hb_log_set_level(HBASE_LOG_LEVEL_DEBUG);// defaults to DEBUG
-        hb_log_set_level(HBASE_LOG_LEVEL_INFO);
-
-        if ((this->ret_code = hb_connection_create(this->zk_quorum.c_str(), this->zk_znode_parent.c_str(),
-                                                   &this->connection)) != 0) {
-            HBASE_LOG_ERROR("Could not create HBase connection : errorCode = %d.", this->ret_code);
-            this->cleanup();
-        }
-
-        HBASE_LOG_INFO("Connecting to HBase cluster using Zookeeper ensemble '%s'.", this->zk_quorum.c_str());
-        if ((this->ret_code = hb_client_create(this->connection, &this->client)) != 0) {
-            HBASE_LOG_ERROR("Could not connect to HBase cluster : errorCode = %d.", this->ret_code);
-            this->cleanup();
-        }
-    }
+    NativeClientWrapper(string zk_quorum, string zk_znode_parent, string table_name_, char delimiter);
+    // NativeClientWrapper(string zk_quorum, string zk_znode_parent, string table_name_, char delimiter) {
+    //     this->zk_quorum = std::move(zk_quorum);
+    //     this->zk_znode_parent = std::move(zk_znode_parent);
+    //     this->table_name = std::move(table_name_);
+    //     this->table_name_len = strlen(table_name.c_str());
+    //     this->delimiter = delimiter;
+    //     // hb_log_set_level(HBASE_LOG_LEVEL_DEBUG);// defaults to DEBUG
+    //     hb_log_set_level(HBASE_LOG_LEVEL_INFO);
+    //
+    //     if ((this->ret_code = hb_connection_create(this->zk_quorum.c_str(), this->zk_znode_parent.c_str(),
+    //                                                &this->connection)) != 0) {
+    //         HBASE_LOG_ERROR("Could not create HBase connection : errorCode = %d.", this->ret_code);
+    //         this->cleanup();
+    //     }
+    //
+    //     HBASE_LOG_INFO("Connecting to HBase cluster using Zookeeper ensemble '%s'.", this->zk_quorum.c_str());
+    //     if ((this->ret_code = hb_client_create(this->connection, &this->client)) != 0) {
+    //         HBASE_LOG_ERROR("Could not connect to HBase cluster : errorCode = %d.", this->ret_code);
+    //         this->cleanup();
+    //     }
+    // }
 
     ~NativeClientWrapper() {
         this->cleanup();
